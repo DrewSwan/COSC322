@@ -529,7 +529,7 @@ public class PossibleMoves
       }//End of downright
       x = 1;
       //DOWNLEFT
-      while ([start[(0)] - x] >= 0 && [start[(0)] - x] >= 0 && board[start[(0)] - x][start[(1)] - x].toString().equalsIgnoreCase("available"))
+      while ([start[(0)] - x] >= 0 && [start[(1)] - x] >= 0 && board[start[(0)] - x][start[(1)] - x].toString().equalsIgnoreCase("available"))
       {
         while ([start[(0)] - x - a] >= 0 && board[start[(0)] - x - a][start[(1)] - x].toString().equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] - x, start[(0)] - x - a, start[(1)] - x);
