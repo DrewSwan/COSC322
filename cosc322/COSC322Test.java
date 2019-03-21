@@ -16,9 +16,9 @@ import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import cosc322.Amazons.BoardGameModel;
-import cosc322.Amazons.GameBoard;
-import cosc322.Amazons.GameBoard.GameEventHandler;
+//import cosc322.Amazons.BoardGameModel;
+//import cosc322.Amazons.GameBoard;
+//import cosc322.Amazons.GameBoard.GameEventHandler;
 import ygraphs.ai.smart_fox.GameMessage;
 import ygraphs.ai.smart_fox.games.AmazonsGameMessage;
 import ygraphs.ai.smart_fox.games.GameClient;
@@ -41,7 +41,7 @@ public class COSC322Test extends GamePlayer{
      * The main method
      * @param args for name and passwd (current, any string would work)
      */
-    public static void main(String[] args) {				 
+   public static void main(String[] args) {				 
 	COSC322Test player_01 = new COSC322Test("Everton1", "1234");  		 
     }
 	
@@ -55,10 +55,13 @@ public class COSC322Test extends GamePlayer{
     public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
 	//This method will be called by the GameClient when it receives a game-related message
 	//from the server.
-    	if(messageType.equals(GameMessage.GAME_ACTION_START)){	 
+    	if(messageType.equals(GameMessage.GAME_ACTION_START)){
+    		//BoardGameModel gboard = new BoardGameModel();
+    		//BoardGameModel();
     	    if(((String) msgDetails.get("player-black")).equals(this.userName())){
     		System.out.println("Game State: " +  msgDetails.get("player-black"));
     		white = false; System.out.println("We go first.");
+    		//randomMove();
     	    } else {
     			System.out.println("Other player goes first.");
     			white = true;
@@ -75,7 +78,13 @@ public class COSC322Test extends GamePlayer{
     }
     
     
-    private void handleOpponentMove(Map<String, Object> msgDetails){
+    /**private void randomMove() {
+		// TODO Auto-generated method stub
+    	PossibleMoves(board,white,wQueens,bQueens);
+
+	}**/
+
+	private void handleOpponentMove(Map<String, Object> msgDetails){
     	System.out.println("OpponentMove(): " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
     	ArrayList<Integer> qcurr = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
     	ArrayList<Integer> qnew = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT);
@@ -86,6 +95,7 @@ public class COSC322Test extends GamePlayer{
 
     	board.markPosition(qnew.get(0), qnew.get(1), arrow.get(0), arrow.get(1), 
     			  qcurr.get(0), qcurr.get(1), true);	
+    	//randomMove();
     }
     	/**Add random move generator**/
     
@@ -299,7 +309,7 @@ public class COSC322Test extends GamePlayer{
           return b;
         }	
         }//End of board game model
-    
+   
     
     
 
