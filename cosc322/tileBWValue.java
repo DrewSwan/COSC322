@@ -11,6 +11,10 @@ public class tileBWValue {
 	private String[][] tempB = new String[10][10];
 	public int wh;
 	public int bl;
+	
+	//If player is white, returns eval value based on wh ownership - black ownership
+	//Positive will be good, negative bad, tie = tie
+	//Still only based on one move ownership
 	public int eval(BoardGameModel BGM) {
 		int value = 0;
 		this.board = BGM.getBoard();
