@@ -3,40 +3,24 @@ package cosc322;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
-import cosc322.COSC322Test.GameBoard;
-
 public class PossibleMoves
   extends BoardGameModel
 {
-  public static ArrayList<move> movelist;
-  private static String[][] board = new String[10][10];
-  private static boolean white = false;
-  static Queen[] wQueens = new Queen[4];
-  static Queen[] bQueens = new Queen[4];
+  public ArrayList<move> movelist;
+  private String[][] board = new String[10][10];
+  private boolean white = false;
+  Queen[] wQueens;
+  Queen[] bQueens;
   
-
-public ArrayList<move> PossibleMoves(BoardGameModel curBoard, boolean white, Queen[] wQueens, Queen[] bQueens)
+  public PossibleMoves(BoardGameModel curBoard)
   {
     board = curBoard.getBoard();
-    white = white;
-    wQueens = wQueens;
-    bQueens = bQueens;
-    PossibleMoves();
-    return movelist;
+    white = curBoard.getWhiteTurn();
+    wQueens = curBoard.getWhiteQueens();
+    bQueens = curBoard.getBlackQueens();
   }
-
-public PossibleMoves(boolean w) {
-	if (w == true) {
-		white = true;
-		PossibleMoves();
-	}else {
-		white = false;
-		PossibleMoves();
-	}
-}
-
-
-public void PossibleMoves()
+  
+  public ArrayList<move> moveGeneration()
   {
     if (white == true) {
       movelist = getMoves(wQueens);
@@ -44,11 +28,11 @@ public void PossibleMoves()
     else {
       movelist = getMoves(bQueens);
     }
-	
+    return movelist;
   }
   
 
-  private static ArrayList<move> getMoves(Queen[] Queens)
+  private ArrayList<move> getMoves(Queen[] Queens)
   {
     ArrayList<move> list = new ArrayList();
     int x = 1;
@@ -60,10 +44,10 @@ public void PossibleMoves()
     for (int i = 0; i < 4; i++) {
       int[] start = Queens[i].getPosition();
       //Left
-      while (start[(0)] - x >= 0 && board[start[(0)] - x][start[1]].toString().equalsIgnoreCase("available"))
+      while (start[(0)] - x >= 0 && board[start[(0)] - x][start[1]].equalsIgnoreCase("available"))
       {
 
-        while ( (start[(0)] - x - a >= 0) && (board[start[(0)] - x - a][start[1]].toString().equalsIgnoreCase("available"))) {
+        while ( (start[(0)] - x - a >= 0) && (board[start[(0)] - x - a][start[1]].equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[(0)] - x, start[1], start[(0)] - x - a, start[1]);
           list.add(current);
           
@@ -71,7 +55,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while ( (start[(1)] + a <= 9) && (board[start[(0)] - x][start[(1)] + a].toString().equalsIgnoreCase("available"))) {
+        while ( (start[(1)] + a <= 9) && (board[start[(0)] - x][start[(1)] + a].equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[(0)] - x, start[1], start[(0)] - x, start[(1)] + a);
           list.add(current);
           
@@ -79,7 +63,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x + a <= 9 && ((board[start[(0)] - x + a][start[1]] == board[start[0]][start[1]]) || (board[start[(0)] - x + a][start[1]].toString().equalsIgnoreCase("available")))) {
+        while (start[(0)] - x + a == start[(0)] || (start[(0)] - x + a <= 9 && board[start[(0)] - x + a][start[1]].equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[(0)] - x, start[1], start[(0)] - x + a, start[1]);
           list.add(current);
           
@@ -87,7 +71,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] - a >= 0 && board[start[(0)] - x][start[(1)] - a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] - a >= 0 && board[start[(0)] - x][start[(1)] - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[1], start[(0)] - x, start[(1)] - a);
           list.add(current);
           
@@ -95,7 +79,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x - a >= 0 && start[(1)] + a <= 9 && board[start[(0)] - x - a][start[(1)] + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x - a >= 0 && start[(1)] + a <= 9 && board[start[(0)] - x - a][start[(1)] + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[1], start[(0)] - x - a, start[(1)] + a);
           list.add(current);
           
@@ -103,7 +87,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x + a <= 9 && start[(1)] + a <= 9 && board[start[(0)] - x + a][start[(1)] + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x + a <= 9 && start[(1)] + a <= 9 && board[start[(0)] - x + a][start[(1)] + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[1], start[(0)] - x + a, start[(1)] + a);
           list.add(current);
           
@@ -111,7 +95,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x + a <= 9 && start[(1)] - a >= 0 && board[start[(0)] - x + a][start[(1)] - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x + a <= 9 && start[(1)] - a >= 0 && board[start[(0)] - x + a][start[(1)] - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[1], start[(0)] - x + a, start[(1)] - a);
           list.add(current);
           
@@ -119,7 +103,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x - a >= 0 && start[(1)] - a >= 0 && board[start[(0)] - x - a][start[(1)] - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x - a >= 0 && start[(1)] - a >= 0 && board[start[(0)] - x - a][start[(1)] - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[1], start[(0)] - x - a, start[(1)] - a);
           list.add(current);
           
@@ -130,9 +114,9 @@ public void PossibleMoves()
       }//End of left
       x = 1;
       //UP
-      while ((start[(1)] + x <= 9) && board[start[0]][start[(1)] + x].toString().equalsIgnoreCase("available"))
+      while ((start[(1)] + x <= 9) && board[start[0]][start[(1)] + x].equalsIgnoreCase("available"))
       {
-        while (start[(0)] - a >= 0 && board[start[(0)] - a][start[(1)] + x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - a >= 0 && board[start[(0)] - a][start[(1)] + x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] + x, start[(0)] - a, start[(1)] + x);
           list.add(current);
           
@@ -140,7 +124,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] + x + a <= 9 && board[start[0]][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] + x + a <= 9 && board[start[0]][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] + x, start[0], start[(1)] + x + a);
           list.add(current);
           
@@ -148,7 +132,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + a <= 9 && board[start[(0)] + a][start[(1)] + x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + a <= 9 && board[start[(0)] + a][start[(1)] + x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] + x, start[(0)] + a, start[(1)] + x);
           list.add(current);
           
@@ -156,7 +140,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while ((start[(1)] + x - a >= 0) && ((board[start[0]][start[(1)] + x - a] == board[start[0]][start[1]]) || (board[start[0]][start[(1)] + x - a].toString().equalsIgnoreCase("available")))) {
+        while (start[(1)] + x - a == start[(1)] || (start[(1)] + x - a >= 0 && board[start[0]][start[(1)] + x - a].equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[0], start[(1)] + x, start[0], start[(1)] + x - a);
           list.add(current);
           
@@ -164,7 +148,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - a >= 0 && start[(1)] + x + a <= 9 && board[start[(0)] - a][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - a >= 0 && start[(1)] + x + a <= 9 && board[start[(0)] - a][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] + x, start[(0)] - a, start[(1)] + x + a);
           list.add(current);
           
@@ -172,7 +156,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + a <= 9 && start[(1)] + x + a <= 9 && board[start[(0)] + a][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + a <= 9 && start[(1)] + x + a <= 9 && board[start[(0)] + a][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] + x, start[(0)] + a, start[(1)] + x + a);
           list.add(current);
           
@@ -180,7 +164,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + a <= 9 && start[(1)] + x - a >= 0 && board[start[(0)] + a][start[(1)] + x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + a <= 9 && start[(1)] + x - a >= 0 && board[start[(0)] + a][start[(1)] + x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] + x, start[(0)] + a, start[(1)] + x - a);
           list.add(current);
           
@@ -188,7 +172,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - a >= 0 && start[(1)] + x - a >= 0 && board[start[(0)] - a][start[(1)] + x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - a >= 0 && start[(1)] + x - a >= 0 && board[start[(0)] - a][start[(1)] + x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] + x, start[(0)] - a, start[(1)] + x - a);
           list.add(current);
           
@@ -199,9 +183,9 @@ public void PossibleMoves()
       }//End of up
       x = 1;
       //Right
-      while (start[(0)] + x <= 9 && board[start[(0)] + x][start[1]].toString().equalsIgnoreCase("available"))
+      while (start[(0)] + x <= 9 && board[start[(0)] + x][start[1]].equalsIgnoreCase("available"))
       {
-        while (start[(0)] + x - a >= 0 && (board[start[(0)] + x - a][start[1]] == board[start[0]][start[1]] || (board[start[(0)] + x - a][start[1]].toString().equalsIgnoreCase("available")))) {
+        while (start[(0)] + x - a == start[(0)] || (start[(0)] + x - a >= 0 && board[start[(0)] + x - a][start[1]].toString().equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[(0)] + x, start[1], start[(0)] + x - a, start[1]);
           list.add(current);
           
@@ -209,7 +193,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while ((start[(1)] + a <= 9) && board[start[(0)] + x][start[(1)] + a].toString().equalsIgnoreCase("available")) {
+        while ((start[(1)] + a <= 9) && board[start[(0)] + x][start[(1)] + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[1], start[(0)] + x, start[(1)] + a);
           list.add(current);
           
@@ -217,7 +201,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x + a <= 9 && board[start[(0)] + x + a][start[1]].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x + a <= 9 && board[start[(0)] + x + a][start[1]].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[1], start[(0)] + x + a, start[1]);
           list.add(current);
           
@@ -225,7 +209,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] - a >= 0 && board[start[(0)] + x][start[(1)] - a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] - a >= 0 && board[start[(0)] + x][start[(1)] - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[1], start[(0)] + x, start[(1)] - a);
           list.add(current);
           
@@ -233,7 +217,7 @@ public void PossibleMoves()
         }
         a = 1;
   
-        while (start[(0)] + x - a  >= 0 && start[(1)] + a  <= 9 && board[start[(0)] + x - a][start[(1)] + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x - a  >= 0 && start[(1)] + a  <= 9 && board[start[(0)] + x - a][start[(1)] + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[1], start[(0)] + x - a, start[(1)] + a);
           list.add(current);
           
@@ -241,7 +225,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x + a  <= 9 && start[(1)] + a  <= 9 && board[start[(0)] + x + a][start[(1)] + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x + a  <= 9 && start[(1)] + a  <= 9 && board[start[(0)] + x + a][start[(1)] + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[1], start[(0)] + x + a, start[(1)] + a);
           list.add(current);
           
@@ -249,7 +233,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x + a <= 9 && start[(1)] - a  >= 0 && board[start[(0)] + x + a][start[(1)] - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x + a <= 9 && start[(1)] - a  >= 0 && board[start[(0)] + x + a][start[(1)] - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[1], start[(0)] + x + a, start[(1)] - a);
           list.add(current);
           
@@ -257,7 +241,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x - a  >= 0 && start[(1)] - a  >= 0 && board[start[(0)] + x - a][start[(1)] - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x - a  >= 0 && start[(1)] - a  >= 0 && board[start[(0)] + x - a][start[(1)] - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[1], start[(0)] + x - a, start[(1)] - a);
           list.add(current);
           
@@ -268,9 +252,9 @@ public void PossibleMoves()
       }//end of right
       x = 1;
       //Down
-      while (start[(1)] - x >= 0 && board[start[0]][start[(1)] - x].toString().equalsIgnoreCase("available"))
+      while (start[(1)] - x >= 0 && board[start[0]][start[(1)] - x].equalsIgnoreCase("available"))
       {
-        while (start[(0)] - a >= 0 && board[start[(0)] - a] [start[(1)] - x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - a >= 0 && board[start[(0)] - a] [start[(1)] - x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] - x, start[(0)] - a, start[(1)] - x);
           list.add(current);
           
@@ -278,7 +262,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while ((start[(1)] - x + a  <= 9) && ((board[start[0]][start[(1)] - x + a] == board[start[0]][start[1]]) || (board[start[0]][start[(1)] + x + a].toString().equalsIgnoreCase("available")))) {
+        while (start[(1)] - x + a == start[(1)] || (start[(1)] - x + a  <= 9 && board[start[0]][start[(1)] - x + a].equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[0], start[(1)] - x, start[0], start[(1)] - x + a);
           list.add(current);
           
@@ -286,7 +270,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + a  <= 9 && board[start[(0)] + a][start[(1)] - x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + a  <= 9 && board[start[(0)] + a][start[(1)] - x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] - x, start[(0)] + a, start[(1)] - x);
           list.add(current);
           
@@ -294,7 +278,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while ((start[(1)] - x - a >= 0) && board[start[0]][start[(1)] - x - a].toString().equalsIgnoreCase("available")) {
+        while ((start[(1)] - x - a >= 0) && board[start[0]][start[(1)] - x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] - x, start[0], start[(1)] - x - a);
           list.add(current);
           
@@ -302,7 +286,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - a  >= 0 && start[(1)] - x + a  <= 9 && board[start[(0)] - a][start[(1)] - x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - a  >= 0 && start[(1)] - x + a  <= 9 && board[start[(0)] - a][start[(1)] - x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] - x, start[(0)] - a, start[(1)] - x + a);
           list.add(current);
           
@@ -310,7 +294,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + a  <= 9 && start[(1)] - x + a  <= 9 && board[start[(0)] + a][start[(1)] - x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + a  <= 9 && start[(1)] - x + a  <= 9 && board[start[(0)] + a][start[(1)] - x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] - x, start[(0)] + a, start[(1)] - x + a);
           list.add(current);
           
@@ -318,7 +302,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + a  <= 9 && start[(1)] - x - a  >= 0 && board[start[(0)] + a][start[(1)] - x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + a  <= 9 && start[(1)] - x - a  >= 0 && board[start[(0)] + a][start[(1)] - x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] - x, start[(0)] + a, start[(1)] - x - a);
           list.add(current);
           
@@ -326,7 +310,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - a  >= 0 && start[(1)] - x - a  >= 0 && board[start[(0)] - a][start[(1)] - x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - a  >= 0 && start[(1)] - x - a  >= 0 && board[start[(0)] - a][start[(1)] - x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[0], start[(1)] - x, start[(0)] - a, start[(1)] - x - a);
           list.add(current);
           
@@ -337,9 +321,9 @@ public void PossibleMoves()
       }//End of down
       x = 1;
       //UPLEFT
-      while (start[(0)] - x >= 0 && start[(1)] + x <= 9 && board[start[(0)] - x][start[(1)] + x].toString().equalsIgnoreCase("available"))
+      while (start[(0)] - x >= 0 && start[(1)] + x <= 9 && board[start[(0)] - x][start[(1)] + x].equalsIgnoreCase("available"))
       {
-        while (start[(0)] - x - a  >= 0 && board[start[(0)] - x - a ][start[(1)] + x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x - a  >= 0 && board[start[(0)] - x - a ][start[(1)] + x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] + x, start[(0)] - x - a, start[(1)] + x);
           list.add(current);
           
@@ -347,7 +331,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] + x + a <= 9 && board[start[(0)] - x][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] + x + a <= 9 && board[start[(0)] - x][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] + x, start[(0)] - x, start[(1)] + x + a);
           list.add(current);
           
@@ -355,7 +339,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x + a  <= 9 && board[start[(0)] - x + a][start[(1)] + x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x + a  <= 9 && board[start[(0)] - x + a][start[(1)] + x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] + x, start[(0)] - x + a, start[(1)] + x);
           list.add(current);
           
@@ -363,7 +347,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] + x - a  >= 0 && board[start[(0)] - x][start[(1)] + x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] + x - a  >= 0 && board[start[(0)] - x][start[(1)] + x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] + x, start[(0)] - x, start[(1)] + x - a);
           list.add(current);
           
@@ -371,7 +355,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x - a  >= 0 && start[(1)] + x + a  <= 9 && board[start[(0)] - x - a][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x - a  >= 0 && start[(1)] + x + a  <= 9 && board[start[(0)] - x - a][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] + x, start[(0)] - x - a, start[(1)] + x + a);
           list.add(current);
           
@@ -379,7 +363,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x + a  <= 9 && start[(1)] + x + a  <= 9 && board[start[(0)] - x + a][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x + a  <= 9 && start[(1)] + x + a  <= 9 && board[start[(0)] - x + a][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] + x, start[(0)] - x + a, start[(1)] + x + a);
           list.add(current);
           
@@ -387,7 +371,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while ((start[(0)] - x + a  <= 9 && start[(1)] + x - a  >= 0 && (board[start[(0)] - x + a][start[(1)] + x - a] == board[start[0]][start[1]] || board[start[(0)] - x + a][start[(1)] + x - a].toString().equalsIgnoreCase("available")))) {
+        while ((start[(0)] - x + a == start[(0)] && start[(1)] + x - a == start[(1)]) || (start[(0)] - x + a  <= 9 && start[(1)] + x - a  >= 0 && board[start[(0)] - x + a][start[(1)] + x - a].equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] + x, start[(0)] - x + a, start[(1)] + x - a);
           list.add(current);
           
@@ -395,7 +379,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x - a  >= 0 && start[(1)] + x - a  >= 0 && board[start[(0)] - x - a][start[(1)] + x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x - a  >= 0 && start[(1)] + x - a  >= 0 && board[start[(0)] - x - a][start[(1)] + x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] + x, start[(0)] - x - a, start[(1)] + x - a);
           list.add(current);
           
@@ -406,9 +390,9 @@ public void PossibleMoves()
       }//End of up left
       x = 1;
       //UPRIGHT
-      while (start[(0)] + x <= 9 && start[(1)] + x <= 9 && board[start[(0)] + x][start[(1)] + x].toString().equalsIgnoreCase("available"))
+      while (start[(0)] + x <= 9 && start[(1)] + x <= 9 && board[start[(0)] + x][start[(1)] + x].equalsIgnoreCase("available"))
       {
-        while (start[(0)] + x - a >= 0 && board[start[(0)] + x - a][start[(1)] + x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x - a >= 0 && board[start[(0)] + x - a][start[(1)] + x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] + x, start[(0)] + x - a, start[(1)] + x);
           list.add(current);
           
@@ -416,7 +400,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] + x + a  <= 9 && board[start[(0)] + x][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] + x + a  <= 9 && board[start[(0)] + x][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] + x, start[(0)] + x, start[(1)] + x + a);
           list.add(current);
           
@@ -424,7 +408,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x + a  <= 9 && board[start[(0)] + x + a][start[(1)] + x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x + a  <= 9 && board[start[(0)] + x + a][start[(1)] + x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] + x, start[(0)] + x + a, start[(1)] + x);
           list.add(current);
           
@@ -432,7 +416,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] + x - a  >= 0 && board[start[(0)] + x][start[(1)] + x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] + x - a  >= 0 && board[start[(0)] + x][start[(1)] + x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] + x, start[(0)] + x, start[(1)] + x - a);
           list.add(current);
           
@@ -440,7 +424,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x - a  >= 0 && start[(1)] + x + a  <= 9 && board[start[(0)] + x - a][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x - a  >= 0 && start[(1)] + x + a  <= 9 && board[start[(0)] + x - a][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] + x, start[(0)] + x - a, start[(1)] + x + a);
           list.add(current);
           
@@ -448,7 +432,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x + a  <= 9 && start[(1)] + x + a  <= 9 && board[start[(0)] + x + a][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x + a  <= 9 && start[(1)] + x + a  <= 9 && board[start[(0)] + x + a][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] + x, start[(0)] + x + a, start[(1)] + x + a);
           list.add(current);
           
@@ -456,7 +440,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x + a  <= 9 && start[(1)] + x - a  >= 0 && board[start[(0)] + x + a][start[(1)] + x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x + a  <= 9 && start[(1)] + x - a  >= 0 && board[start[(0)] + x + a][start[(1)] + x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] + x, start[(0)] + x + a, start[(1)] + x - a);
           list.add(current);
           
@@ -464,7 +448,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x - a  >= 0 && start[(1)] + x - a  >= 0 && (board[start[(0)] + x - a][start[(1)] + x - a] == board[start[0]][start[1]] || board[start[(0)] + x - a][start[(1)] + x - a].toString().equalsIgnoreCase("available"))) {
+        while ((start[(0)] + x - a == start[(0)] && start[(1)] + x - a == start[(1)]) || (start[(0)] + x - a  >= 0 && start[(1)] + x - a  >= 0 && board[start[(0)] + x - a][start[(1)] + x - a].equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] + x, start[(0)] + x - a, start[(1)] + x - a);
           list.add(current);
           
@@ -475,7 +459,7 @@ public void PossibleMoves()
       }//End of upright
       x = 1;
       //Downright
-      while (start[(0)] + x <= 9 && start[(1)] - x >= 0 && board[start[(0)] + x][start[(1)] - x].toString().equalsIgnoreCase("available"))
+      while (start[(0)] + x <= 9 && start[(1)] - x >= 0 && board[start[(0)] + x][start[(1)] - x].equalsIgnoreCase("available"))
       {
         while (start[(0)] + x - a  >= 0 && board[start[(0)] + x - a][start[(1)] - x].toString().equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] - x, start[(0)] + x - a, start[(1)] - x);
@@ -485,7 +469,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] + x + a <= 9 && board[start[(0)] + x][start[(1)] - x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] + x + a <= 9 && board[start[(0)] + x][start[(1)] - x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] - x, start[(0)] + x, start[(1)] - x + a);
           list.add(current);
           
@@ -493,7 +477,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x + a  <= 9 && board[start[(0)] + x + a][start[(1)] - x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x + a  <= 9 && board[start[(0)] + x + a][start[(1)] - x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] - x, start[(0)] + x + a, start[(1)] - x);
           list.add(current);
           
@@ -501,7 +485,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] - x - a  >= 0 && board[start[(0)] + x][start[(1)] - x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] - x - a  >= 0 && board[start[(0)] + x][start[(1)] - x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] - x, start[(0)] + x, start[(1)] - x - a);
           list.add(current);
           
@@ -509,7 +493,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x - a  >= 0 && start[(1)] - x + a  <= 9 && (board[start[(0)] + x - a][start[(1)] - x + a] == board[start[0]][start[1]] || (board[start[(0)] + x - a][start[(1)] - x + a].toString().equalsIgnoreCase("available")))) {
+        while ((start[(0)] + x - a == start[(0)] && start[(1)] - x + a == start[(1)]) || (start[(0)] + x - a  >= 0 && start[(1)] - x + a  <= 9 && board[start[(0)] + x - a][start[(1)] - x + a].equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] - x, start[(0)] + x - a, start[(1)] - x + a);
           list.add(current);
           
@@ -517,7 +501,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x + a  <=9 && start[(1)] - x + a <= 9 && board[start[(0)] + x + a][start[(1)] - x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x + a  <=9 && start[(1)] - x + a <= 9 && board[start[(0)] + x + a][start[(1)] - x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] - x, start[(0)] + x + a, start[(1)] - x + a);
           list.add(current);
           
@@ -525,7 +509,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x + a  <= 9 && start[(1)] - x - a  >= 0 && board[start[(0)] + x + a][start[(1)] - x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x + a  <= 9 && start[(1)] - x - a  >= 0 && board[start[(0)] + x + a][start[(1)] - x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] - x, start[(0)] + x + a, start[(1)] - x - a);
           list.add(current);
           
@@ -533,7 +517,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] + x - a  >= 0 && start[(1)] - x - a  >= 0 && board[start[(0)] + x - a][start[(1)] - x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] + x - a  >= 0 && start[(1)] - x - a  >= 0 && board[start[(0)] + x - a][start[(1)] - x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] + x, start[(1)] - x, start[(0)] + x - a, start[(1)] - x - a);
           list.add(current);
           
@@ -544,9 +528,9 @@ public void PossibleMoves()
       }//End of downright
       x = 1;
       //DOWNLEFT
-      while (start[(0)] - x >= 0 && start[(1)] - x >= 0 && board[start[(0)] - x][start[(1)] - x].toString().equalsIgnoreCase("available"))
+      while (start[(0)] - x >= 0 && start[(1)] - x >= 0 && board[start[(0)] - x][start[(1)] - x].equalsIgnoreCase("available"))
       {
-        while (start[(0)] - x - a  >= 0 && board[start[(0)] - x - a][start[(1)] - x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x - a  >= 0 && board[start[(0)] - x - a][start[(1)] - x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] - x, start[(0)] - x - a, start[(1)] - x);
           list.add(current);
           
@@ -554,7 +538,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] + x + a  <= 9 && board[start[(0)] - x][start[(1)] + x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] + x + a  <= 9 && board[start[(0)] - x][start[(1)] + x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] - x, start[(0)] - x, start[(1)] - x + a);
           list.add(current);
           
@@ -562,7 +546,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x + a  <= 9 && board[start[(0)] - x + a][start[(1)] - x].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x + a  <= 9 && board[start[(0)] - x + a][start[(1)] - x].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] - x, start[(0)] - x + a, start[(1)] - x);
           list.add(current);
           
@@ -570,7 +554,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(1)] - x - a  >= 0 && board[start[(0)] - x][start[(1)] - x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(1)] - x - a  >= 0 && board[start[(0)] - x][start[(1)] - x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] - x, start[(0)] - x, start[(1)] - x - a);
           list.add(current);
           
@@ -578,7 +562,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x - a  >= 0 && start[(1)] - x + a  <= 9 && board[start[(0)] - x - a][start[(1)] - x + a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x - a  >= 0 && start[(1)] - x + a  <= 9 && board[start[(0)] - x - a][start[(1)] - x + a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] - x, start[(0)] - x - a, start[(1)] - x + a);
           list.add(current);
           
@@ -586,7 +570,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x + a  <= 9 && start[(1)] - x + a  <= 9 && (board[start[(0)] - x + a][start[(1)] - x + a] == board[start[0]][start[1]] || (board[start[(0)] - x + a][start[(1)] - x + a].toString().equalsIgnoreCase("available")))) {
+        while ((start[(0)] - x + a == start[(0)] && start[(1)] - x + a == start[(1)]) || (start[(0)] - x + a  <= 9 && start[(1)] - x + a  <= 9 && board[start[(0)] - x + a][start[(1)] - x + a].equalsIgnoreCase("available"))) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] - x, start[(0)] - x + a, start[(1)] - x + a);
           list.add(current);
           
@@ -594,7 +578,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x + a  <= 9 && start[(1)] - x - a  >= 0 && board[start[(0)] - x + a][start[(1)] - x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x + a  <= 9 && start[(1)] - x - a  >= 0 && board[start[(0)] - x + a][start[(1)] - x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] - x, start[(0)] - x + a, start[(1)] - x - a);
           list.add(current);
           
@@ -602,7 +586,7 @@ public void PossibleMoves()
         }
         a = 1;
         
-        while (start[(0)] - x - a  >= 0 && start[(1)] - x - a  >= 0 && board[start[(0)] - x - a][start[(1)] - x - a].toString().equalsIgnoreCase("available")) {
+        while (start[(0)] - x - a  >= 0 && start[(1)] - x - a  >= 0 && board[start[(0)] - x - a][start[(1)] - x - a].equalsIgnoreCase("available")) {
           current = new move(start[0], start[1], start[(0)] - x, start[(1)] - x, start[(0)] - x - a, start[(1)] - x - a);
           list.add(current);
           
