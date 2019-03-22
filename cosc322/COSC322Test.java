@@ -1,4 +1,3 @@
-
 package cosc322;
 
 import java.awt.BorderLayout;
@@ -47,7 +46,7 @@ public class COSC322Test extends GamePlayer{
 	
     public COSC322Test(String userName, String passwd) {
 	this.userName = userName;
-    setupGUI();       
+        setupGUI();       
 	gameClient = new GameClient(userName, passwd, this);	 
     }
  
@@ -56,12 +55,11 @@ public class COSC322Test extends GamePlayer{
 	//This method will be called by the GameClient when it receives a game-related message
 	//from the server.
     	if(messageType.equals(GameMessage.GAME_ACTION_START)){
-    		//BoardGameModel gboard = new BoardGameModel();
-    		//BoardGameModel();
+    		
     	    if(((String) msgDetails.get("player-black")).equals(this.userName())){
     		System.out.println("Game State: " +  msgDetails.get("player-black"));
     		white = false; System.out.println("We go first.");
-    		//randomMove();
+    		
     	    } else {
     			System.out.println("Other player goes first.");
     			white = true;
@@ -76,13 +74,7 @@ public class COSC322Test extends GamePlayer{
 	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
 	return true;
     }
-    
-    
-    /**private void randomMove() {
-		// TODO Auto-generated method stub
-    	PossibleMoves(board,white,wQueens,bQueens);
-
-	}**/
+        
 
 	private void handleOpponentMove(Map<String, Object> msgDetails){
     	System.out.println("OpponentMove(): " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
@@ -272,7 +264,10 @@ public class COSC322Test extends GamePlayer{
     	}
     	
     	
-    	public boolean positionMarked(int row, int column, int arow, int acol,
+    	
+
+
+		public boolean positionMarked(int row, int column, int arow, int acol,
     			 int qfr, int qfc, boolean opponentMove){
     		boolean valid = true;
     		

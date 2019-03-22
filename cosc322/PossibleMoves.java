@@ -3,6 +3,8 @@ package cosc322;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import cosc322.COSC322Test.GameBoard;
+
 public class PossibleMoves
   extends BoardGameModel
 {
@@ -12,17 +14,29 @@ public class PossibleMoves
   static Queen[] wQueens = new Queen[4];
   static Queen[] bQueens = new Queen[4];
   
-  public PossibleMoves(BoardGameModel curBoard, boolean white, Queen[] wQueens, Queen[] bQueens)
+
+public ArrayList<move> PossibleMoves(BoardGameModel curBoard, boolean white, Queen[] wQueens, Queen[] bQueens)
   {
     board = curBoard.getBoard();
     white = white;
     wQueens = wQueens;
     bQueens = bQueens;
     PossibleMoves();
-    System.out.println(movelist);
+    return movelist;
   }
-  
-  public static void PossibleMoves()
+
+public PossibleMoves(boolean w) {
+	if (w == true) {
+		white = true;
+		PossibleMoves();
+	}else {
+		white = false;
+		PossibleMoves();
+	}
+}
+
+
+public void PossibleMoves()
   {
     if (white == true) {
       movelist = getMoves(wQueens);
@@ -30,6 +44,7 @@ public class PossibleMoves
     else {
       movelist = getMoves(bQueens);
     }
+	
   }
   
 
