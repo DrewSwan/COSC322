@@ -9,6 +9,21 @@ package cosc322;
 public class tileBWValue {
 	private String[][] board = new String[10][10];
 	private String[][] tempB = new String[10][10];
+	public int wh;
+	public int bl;
+	public int eval(BoardGameModel BGM) {
+		int value = 0;
+		this.board = BGM.getBoard();
+		
+		tileBWValue(board);
+		if (BGM.getWhiteTurn() == true) {
+			value = wh-bl;
+		}else if(BGM.getWhiteTurn() == false) {
+			value = bl-wh;
+		}
+		return value;
+	}
+
 /**
  * 
  * tempB will become a board showing who owns each space
@@ -21,13 +36,13 @@ public class tileBWValue {
  * 
  * @param b
  */
-	public tileBWValue(String[][] b) {
+	private void tileBWValue(String[][] b) {
 		this.board = b;
 		tempB = b;
 		// wh = spaces white "own"
 		// bl = spaces black "own"
-		int wh = 0;
-		int bl = 0;
+		wh = 0;
+		bl = 0;
 
 		int r = 1;
 		int c = 1;
