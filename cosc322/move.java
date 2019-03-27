@@ -6,7 +6,7 @@
 package cosc322;
 
 
-class move
+public class move
 {
   int qx;
   int qy;

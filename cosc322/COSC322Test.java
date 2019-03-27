@@ -10,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.Box;
 import javax.swing.JFrame;
@@ -24,309 +26,332 @@ import ygraphs.ai.smart_fox.games.GameClient;
 import ygraphs.ai.smart_fox.games.GameModel;
 import ygraphs.ai.smart_fox.games.GamePlayer;
 
+public class COSC322Test extends GamePlayer {
 
-public class COSC322Test extends GamePlayer{
+	private GameClient gameClient;
+	private JFrame guiFrame = null;
+	private GameBoard board = null;
+	private boolean gameStarted = false;
+	private String userName = null;
+	static private boolean white = false;
 
-    private GameClient gameClient;
-    private JFrame guiFrame = null;    
-    private GameBoard board = null; 
-    private boolean gameStarted = false;
-    private String userName = null;
-   static private boolean white = false;
-    
- 
-	
-    /**
-     * The main method
-     * @param args for name and passwd (current, any string would work)
-     */
-   public static void main(String[] args) {				 
-	COSC322Test player_01 = new COSC322Test("Everton1", "1234");  		 
-    }
-	
-    public COSC322Test(String userName, String passwd) {
-	this.userName = userName;
-        setupGUI();       
-	gameClient = new GameClient(userName, passwd, this);	 
-    }
- 
-    @Override
-    public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
-	//This method will be called by the GameClient when it receives a game-related message
-	//from the server.
-    	if(messageType.equals(GameMessage.GAME_ACTION_START)){
-    		
-    	    if(((String) msgDetails.get("player-black")).equals(this.userName())){
-    		System.out.println("Game State: " +  msgDetails.get("player-black"));
-    		white = false; System.out.println("We go first.");
-    		
-    	    } else {
-    			System.out.println("Other player goes first.");
-    			white = true;
-    		}
-    	    
-    	}
-    	else if(messageType.equals(GameMessage.GAME_ACTION_MOVE)){
-    	    handleOpponentMove(msgDetails);
-    	}
-    	
-	//For a detailed description of the message types and format, 
-	//see the method GamePlayer.handleGameMessage() in the game-client-api document. 
-	return true;
-    }
-        
+	public static boolean ourTurn = false;
 
-	private void handleOpponentMove(Map<String, Object> msgDetails){
-    	System.out.println("OpponentMove(): " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
-    	ArrayList<Integer> qcurr = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
-    	ArrayList<Integer> qnew = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT);
-    	ArrayList<Integer> arrow = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.ARROW_POS);
-    	System.out.println("QCurr: " + qcurr);
-    	System.out.println("QNew: " + qnew);
-    	System.out.println("Arrow: " + arrow);
+	ActionTree moveGenerator;
 
-    	board.markPosition(qnew.get(0), qnew.get(1), arrow.get(0), arrow.get(1), 
-    			  qcurr.get(0), qcurr.get(1), true);	
-    	//randomMove();
-    }
-    	/**Add random move generator**/
-    
+	/**
+	 * The main method
+	 * 
+	 * @param args for name and passwd (current, any string would work)
+	 */
+	public static void main(String[] args) {
+		COSC322Test player_01 = new COSC322Test("Everton2", "1234");
+	}
 
-	//Need to feed generated move into proper coordinates and will send to server.
-    public void playerMove(int x, int y, int arow, int acol, int qfr, int qfc){		
-		 
-    	int[] qf = new int[2];
-    	qf[0] = qfr;
-    	qf[1] = qfc;
+	public COSC322Test(String userName, String passwd) {
+		this.userName = userName;
+		setupGUI();
+		gameClient = new GameClient(userName, passwd, this);
 
-    	int[] qn = new int[2];
-    	qn[0] = x;
-    	qn[1] = y;
+	}
 
-    	int[] ar = new int[2];
-    	ar[0] = arow;
-    	ar[1] = acol;
- 
-    	this.gameClient.sendMoveMessage(qf, qn, ar);
-    	
-        }
-    
-    
-    private void setupGUI(){
-	    guiFrame = new JFrame();
-		   
+	@Override
+	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
+		// This method will be called by the GameClient when it receives a game-related
+		// message
+		// from the server.
+		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
+			// BoardGameModel gboard = new BoardGameModel();
+			// BoardGameModel();
+			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
+				System.out.println("Game State: " + msgDetails.get("player-black"));
+				white = false;
+				System.out.println("We go first.");
+				ourMove();
+			} else {
+				System.out.println("Other player goes first.");
+				white = true;
+			}
+
+		} else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
+			System.out.println("AAA");
+			handleOpponentMove(msgDetails);
+		}
+
+		// For a detailed description of the message types and format,
+		// see the method GamePlayer.handleGameMessage() in the game-client-api
+		// document.
+		return true;
+	}
+
+	/**
+	 * private void randomMove() { // TODO Auto-generated method stub
+	 * PossibleMoves(board,white,wQueens,bQueens); }
+	 **/
+
+	private void handleOpponentMove(Map<String, Object> msgDetails) {
+		System.out.println("OpponentMove(): " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
+		ArrayList<Integer> qcurr = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
+		ArrayList<Integer> qnew = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.Queen_POS_NEXT);
+		ArrayList<Integer> arrow = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.ARROW_POS);
+		System.out.println("QCurr: " + qcurr);
+		System.out.println("QNew: " + qnew);
+		System.out.println("Arrow: " + arrow);
+
+		board.markPosition(qnew.get(0), qnew.get(1), arrow.get(0), arrow.get(1), qcurr.get(0), qcurr.get(1), true);
+		ourMove();
+	}
+
+	/** Add random move generator **/
+
+	public void ourMove() {
+		System.out.println("Calculating Move");
+		ourTurn = true;
+
+		long startTime = System.currentTimeMillis();
+
+		moveGenerator = new ActionTree(board.gameModel);
+		PossibleMoves initialMove = new PossibleMoves(board.gameModel);
+		board.gameModel.childMoves = initialMove.moveGeneration();
+
+		String[][] test = moveGenerator.getRoot().getData().getBoard();
+
+		ArrayList<ActionTree.Node<BoardGameModel>> previousDepth = new ArrayList<ActionTree.Node<BoardGameModel>>();
+		ArrayList<ActionTree.Node<BoardGameModel>> currentDepth = new ArrayList<ActionTree.Node<BoardGameModel>>();
+
+		for (move m : board.gameModel.childMoves) {
+			currentDepth.add(moveGenerator.getRoot().createChild(
+					new BoardGameModel(moveGenerator.getRoot().getData(), m.qx, m.qy, m.nx, m.ny, m.ax, m.ay)));
+		}
+
+		moveGenerator.depthNodes.add(currentDepth);
+
+		test = moveGenerator.getRoot().getData().getBoard();
+		BoardGameModel currentBoard;
+		PossibleMoves moves;
+		int i = 2;
+		// System.out.println(moveGenerator.depthNodes.get(i-1).toString());
+		int y = 0;
+
+		while (ourTurn) {
+			currentDepth = new ArrayList<ActionTree.Node<BoardGameModel>>();
+			previousDepth = moveGenerator.depthNodes.get(i - 1);
+			// System.out.println(previousDepth.toString());
+			// System.out.println(previousDepth.toString());
+			for (ActionTree.Node<BoardGameModel> a : previousDepth) {
+				currentBoard = a.getData();
+				moves = new PossibleMoves(currentBoard);
+				currentBoard.childMoves = moves.moveGeneration();
+				for (move m : currentBoard.childMoves) {
+					if (m == null) {
+						System.out.println("Issue Found");
+					}
+					currentDepth
+							.add(a.createChild(new BoardGameModel(currentBoard, m.qx, m.qy, m.nx, m.ny, m.ax, m.ay)));
+				}
+				if (System.currentTimeMillis() - startTime > 20000) {
+					break;
+				}
+
+				// System.out.println("i = " + i + ", y = " + y++);
+			}
+			if (System.currentTimeMillis() - startTime > 20000) {
+				break;
+			}
+			moveGenerator.depthNodes.add(currentDepth);
+			// System.out.println("i = " + i);
+			i++;
+		}
+
+		determineMove(i);
+		// ArrayList<move> nextLayer;
+
+	}
+
+	// Need to feed generated move into proper coordinates and will send to server.
+	public void playerMove(int x, int y, int arow, int acol, int qfr, int qfc) {
+
+		int[] qf = new int[2];
+		qf[0] = qfr;
+		qf[1] = qfc;
+
+		int[] qn = new int[2];
+		qn[0] = x;
+		qn[1] = y;
+
+		int[] ar = new int[2];
+		ar[0] = arow;
+		ar[1] = acol;
+
+		this.gameClient.sendMoveMessage(qf, qn, ar);
+
+	}
+
+	private void setupGUI() {
+		guiFrame = new JFrame();
+
 		guiFrame.setSize(800, 600);
-		guiFrame.setTitle("Game of the Amazons (COSC 322, )" + this.userName());	
-		
+		guiFrame.setTitle("Game of the Amazons (COSC 322, )" + this.userName());
+
 		guiFrame.setLocation(200, 200);
 		guiFrame.setVisible(true);
-	    guiFrame.repaint();		
+		guiFrame.repaint();
 		guiFrame.setLayout(null);
-		
+
 		Container contentPane = guiFrame.getContentPane();
-		contentPane.setLayout(new  BorderLayout());
-		 
-		contentPane.add(Box.createVerticalGlue()); 
-		
-		board = createGameBoard();		
-		contentPane.add(board,  BorderLayout.CENTER);
-    }
-    
-    private GameBoard createGameBoard(){
-	return new GameBoard(this);
-    }	
-		
-    
-    public class GameBoard extends JPanel{
+		contentPane.setLayout(new BorderLayout());
 
-	    private static final long serialVersionUID = 1L;
-	    private  int rows = 10;
-	    private  int cols = 10; 
+		contentPane.add(Box.createVerticalGlue());
 
-	    int width = 500;
-	    int height = 500;
-	    int cellDim = width / 10; 
-	    int offset = width / 20;
+		board = createGameBoard();
+		contentPane.add(board, BorderLayout.CENTER);
+	}
 
-	    int posX = -1;
-	    int posY = -1;
+	public boolean handleMessage(String msg) {
+		System.out.println("Time Out ------ " + msg);
+		return true;
+	}
 
-	    int r = 0;
-	    int c = 0;
+	private GameBoard createGameBoard() {
+		return new GameBoard(this);
+	}
 
+	public class GameBoard extends JPanel {
 
-	    COSC322Test game = null; 
-	    
-	private BoardGameModel gameModel = null;
+		private static final long serialVersionUID = 1L;
+		private int rows = 10;
+		private int cols = 10;
 
-	    boolean playerAMove;
+		int width = 500;
+		int height = 500;
+		int cellDim = width / 10;
+		int offset = width / 20;
 
-	    public GameBoard(COSC322Test game){
-	    this.game = game;	       
-	    gameModel = new BoardGameModel(this.rows + 1, this.cols + 1);
+		int posX = -1;
+		int posY = -1;
 
-	   
-	    init(true);	
-	    }
+		int r = 0;
+		int c = 0;
 
+		COSC322Test game = null;
 
-	    public void init(boolean isPlayerA){
-	    String tagB = null;
-	    String tagW = null;
+		private BoardGameModel gameModel = null;
 
-	    tagB = BoardGameModel.POS_MARKED_BLACK;
-	    tagW = BoardGameModel.POS_MARKED_WHITE;
+		boolean playerAMove;
 
-	    gameModel.gameBoard[1][4] = tagW;
-	    gameModel.gameBoard[1][7] = tagW;
-	    gameModel.gameBoard[3][1] = tagW;
-	    gameModel.gameBoard[3][10] = tagW;
+		public GameBoard(COSC322Test game) {
+			this.game = game;
+			gameModel = new BoardGameModel();
 
-	    gameModel.gameBoard[8][1] = tagB;
-	    gameModel.gameBoard[8][10] = tagB;
-	    gameModel.gameBoard[10][4] = tagB;
-	    gameModel.gameBoard[10][7] = tagB;		
-	    }
+		}
 
-	    public boolean markPosition(int qrow, int qcol, int arow, int acol, 
-			      int qfr, int qfc, boolean  opponentMove){						
+		public boolean markPosition(int qrow, int qcol, int arow, int acol, int qfr, int qfc, boolean opponentMove) {
 
-		    System.out.println(qrow + ", " + qcol + ", " + arow + ", " + acol 
-				    + ", " + qfr + ", " + qfc);
+			System.out.println(qrow + ", " + qcol + ", " + arow + ", " + acol + ", " + qfr + ", " + qfc);
 
-		    boolean valid = gameModel.positionMarked(qrow, qcol, arow, acol, qfr, qfc, opponentMove);
-		    repaint();						
-		    return valid;
-	    }
+			boolean valid = gameModel.positionMarked(qrow - 1, qcol - 1, arow - 1, acol - 1, qfr - 1, qfc - 1,
+					opponentMove);
+			repaint();
+			return valid;
+		}
 
-	    // JCmoponent method
-	    protected void paintComponent(Graphics gg){
-		    Graphics g = (Graphics2D) gg;
+		// JCmoponent method
+		protected void paintComponent(Graphics gg) {
+			Graphics g = (Graphics2D) gg;
+			String[][] board = gameModel.getBoard();
 
-		    for(int i = 0; i < rows + 1; i++){
-			    g.drawLine(i * cellDim + offset, offset, i * cellDim + offset, rows * cellDim + offset);
-			    g.drawLine(offset, i*cellDim + offset, cols * cellDim + offset, i*cellDim + offset);					 
-		    }
+			for (int i = 0; i < rows + 1; i++) {
+				g.drawLine(i * cellDim + offset, offset, i * cellDim + offset, rows * cellDim + offset);
+				g.drawLine(offset, i * cellDim + offset, cols * cellDim + offset, i * cellDim + offset);
+			}
 
-		    for(int r = 0; r < rows; r++){
-		      for(int c = 0; c < cols; c++){
+			for (int r = 0; r < rows; r++) {
+				for (int c = 0; c < cols; c++) {
 
-				    posX = c * cellDim + offset;
-				    posY = r * cellDim + offset;
+					posX = c * cellDim + offset;
+					posY = r * cellDim + offset;
 
-				    posY = (9 - r) * cellDim + offset;
+					posY = (9 - r) * cellDim + offset;
+					// remove +1's
+					if (board[r][c].equalsIgnoreCase(BoardGameModel.POS_AVAILABLE)) {
+						g.clearRect(posX + 1, posY + 1, 49, 49);
+					}
 
-			    if(gameModel.gameBoard[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_AVAILABLE)){
-				    g.clearRect(posX + 1, posY + 1, 49, 49);					
-			    }
+					if (board[r][c].equalsIgnoreCase(BoardGameModel.POS_MARKED_BLACK)) {
+						g.fillOval(posX, posY, 50, 50);
+					} else if (board[r][c].equalsIgnoreCase(BoardGameModel.POS_MARKED_ARROW)) {
+						g.clearRect(posX + 1, posY + 1, 49, 49);
+						g.drawLine(posX, posY, posX + 50, posY + 50);
+						g.drawLine(posX, posY + 50, posX + 50, posY);
+					} else if (board[r][c].equalsIgnoreCase(BoardGameModel.POS_MARKED_WHITE)) {
+						g.drawOval(posX, posY, 50, 50);
+					}
+				}
+			}
 
-			    if(gameModel.gameBoard[r + 1][c + 1].equalsIgnoreCase(
-					      BoardGameModel.POS_MARKED_BLACK)){
-				    g.fillOval(posX, posY, 50, 50);
-			    } 
-			    else if(gameModel.gameBoard[r + 1][c + 1].equalsIgnoreCase(
-				      BoardGameModel.POS_MARKED_ARROW)) {
-				    g.clearRect(posX + 1, posY + 1, 49, 49);
-				    g.drawLine(posX, posY, posX + 50, posY + 50);
-				    g.drawLine(posX, posY + 50, posX + 50, posY);
-			    }
-			    else if(gameModel.gameBoard[r + 1][c + 1].equalsIgnoreCase(BoardGameModel.POS_MARKED_WHITE)){
-				    g.drawOval(posX, posY, 50, 50);
-			    }
-		      }
-	    }
+		}// method
 
-	    }//method
+		// JComponent method
+		public Dimension getPreferredSize() {
+			return new Dimension(500, 500);
+		}
 
-	    //JComponent method
-	    public Dimension getPreferredSize() {
-		    return new Dimension(500,500);
-	    }	
+	}// end of GameBoard
 
-    }//end of GameBoard  
-    class BoardGameModel extends GameModel {
+	public void determineMove(int depth) {
+		ourTurn = false;
 
-    	public static final String POS_MARKED_BLACK = "black";
-    	public static final String POS_MARKED_WHITE = "white";
-    	public static final String POS_MARKED_ARROW = "arrow";
-    	public static final String POS_AVAILABLE = "available";
-    	
-    	 String[][] gameBoard = null; 
-    	
-    	public BoardGameModel(int rows, int columns){
-    		
-    		gameBoard = new String[rows + 1][columns + 1];
-    		for(int i = 1; i < rows + 1; i++){
-    			for(int j = 1; j < columns + 1; j++){
-    				gameBoard[i][j] = BoardGameModel.POS_AVAILABLE;
-    			}
-    		}
-    	}
-    	
-    	
-    	
+		System.out.println("Move decided on");
 
+		BoardGameModel bestMove = moveGenerator.minMax(depth);
 
-		public boolean positionMarked(int row, int column, int arow, int acol,
-    			 int qfr, int qfc, boolean opponentMove){
-    		boolean valid = true;
-    		
-     
-    		
-    		if(row >= gameBoard.length | column >= gameBoard.length 
-    				 || row <= 0 || column <= 0){
-    			valid = false;
-    		}
-    		else if (!gameBoard[row][column].equalsIgnoreCase(BoardGameModel.POS_AVAILABLE)){
-    			valid = false;
-    		}
-            
-    		if(valid){
-    			gameBoard[row][column] = gameBoard[qfr][qfc];		
-    			gameBoard[qfr][qfc] = BoardGameModel.POS_AVAILABLE;		
-    			gameBoard[arow][acol] = BoardGameModel.POS_MARKED_ARROW;
-    		}
-    		
-    		//System.out.println(this.toString());
-    		
-    		return valid;
-    	}	
-    	
-    	public String toString(){
-          String b = null;
+		if (bestMove == null) {
+			System.out.println("RIP");
+		}
+		System.out.println("Success");
+		System.out
+				.println("PrevX " + (bestMove.movedQueenPreviousX + 1) + ",PrevY " + (bestMove.movedQueenPreviousY + 1)
+						+ ",NowX " + (bestMove.movedQueenNowX + 1) + ",NowY " + (bestMove.movedQueenNowY + 1));
+		playerMove(bestMove.movedQueenNowX + 1, bestMove.movedQueenNowY + 1, bestMove.firedArrowX + 1,
+				bestMove.firedArrowY + 1, bestMove.movedQueenPreviousX + 1, bestMove.movedQueenPreviousY + 1);
 
-          for(int i = 1; i < 11; i++){
-    	      for(int j = 1; j< 11; j++){
-    		b = b + gameBoard[i][j] + " ";
-    	      }
-    	      b = b + "\n";
-          }  	  
-          return b;
-        }	
-        }//End of board game model
-   
-    
-    
+		/***
+		 * 
+		 * MARCH 27: This is where the only error lies Need to call boolean validMove in
+		 * order to update our own GUI with our move.
+		 * 
+		 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		 * 
+		 */
+		// boolean validMove = GB.markPosition(bestMove.movedQueenNowX + 1,
+		// bestMove.movedQueenNowY + 1,
+		// bestMove.firedArrowX + 1, bestMove.firedArrowY + 1,
+		// bestMove.movedQueenPreviousX + 1,
+		// bestMove.movedQueenPreviousY + 1, false); // update itself
+	}
 
-    @Override
-    public void onLogin() {
-    	ArrayList<String> rooms = gameClient.getRoomList();
-    	for (int i=0;i<rooms.size();i++) {
-    		System.out.println("ROOM NUMBER "+i+": "+ rooms.get(i));
-    	}
-    	
-    	Scanner reader = new Scanner(System.in);  // Reading from System.in
-    	System.out.println("Enter a room number: ");
-    	int n = reader.nextInt();
-    	reader.close();	 
-    	System.out.println("Logging into: "+rooms.get(n)+"...");
-    	this.gameClient.joinRoom(rooms.get(n));
-    	System.out.println("Currently in room: "+rooms.get(n));
-    	
-    }
-    
-    @Override
-    public String userName() {
-	return userName;
-    }
-}//end of class
+	String[][] boardGame = null;
+
+	@Override
+	public void onLogin() {
+		ArrayList<String> rooms = gameClient.getRoomList();
+		for (int i = 0; i < rooms.size(); i++) {
+			System.out.println("ROOM NUMBER " + i + ": " + rooms.get(i));
+		}
+
+		Scanner reader = new Scanner(System.in); // Reading from System.in
+		System.out.println("Enter a room number: ");
+		int n = reader.nextInt();
+		reader.close();
+		System.out.println("Logging into: " + rooms.get(n) + "...");
+		this.gameClient.joinRoom(rooms.get(n));
+		System.out.println("Currently in room: " + rooms.get(n));
+
+		// ourMove();
+	}
+
+	@Override
+	public String userName() {
+		return userName;
+	}
+}// end of class

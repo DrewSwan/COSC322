@@ -4,10 +4,10 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 
 public class PossibleMoves
-  extends BoardGameModel
+  
 {
   public ArrayList<move> movelist;
-  private String[][] board = new String[10][10];
+  String[][] board = new String[10][10];
   private boolean white = false;
   Queen[] wQueens;
   Queen[] bQueens;
@@ -34,7 +34,7 @@ public class PossibleMoves
 
   private ArrayList<move> getMoves(Queen[] Queens)
   {
-    ArrayList<move> list = new ArrayList();
+    ArrayList<move> list = new ArrayList<>();
     int x = 1;
     int a = 1;
     

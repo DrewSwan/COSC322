@@ -5,15 +5,19 @@
  */
 package cosc322;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
+
+import ygraphs.ai.smart_fox.games.GameModel;
 
 /**
  *
  * @author drews
  */
-public class BoardGameModel {
+public class BoardGameModel extends GameModel{
     
     public static final String POS_MARKED_BLACK = "black";
     public static final String POS_MARKED_WHITE = "white";
@@ -21,10 +25,14 @@ public class BoardGameModel {
     public static final String POS_AVAILABLE = "available";
     
     int[] pos;
+    ArrayList<move> childMoves;
     
-    int[] movedQueenPrevious;
-    int[] movedQueenNow;
-    int[] firedArrow;
+    int movedQueenPreviousX;
+    int movedQueenPreviousY;
+    int movedQueenNowX;
+    int movedQueenNowY;
+    int firedArrowX;
+    int firedArrowY;
     
     //wQueens contains the objects for each of the white queens, bQueens does the same for black queens.
     Queen[] wQueens = new Queen[4];
@@ -45,11 +53,11 @@ public class BoardGameModel {
         
         wQueens[0] = new Queen(new int[]{0,3});
         wQueens[1] = new Queen(new int[]{0,6});
-        wQueens[2] = new Queen(new int[]{2,0});
-        wQueens[3] = new Queen(new int[]{2,9});
+        wQueens[2] = new Queen(new int[]{3,0});
+        wQueens[3] = new Queen(new int[]{3,9});
         
-        bQueens[0] = new Queen(new int[]{7,0});
-        bQueens[1] = new Queen(new int[]{7,9});
+        bQueens[0] = new Queen(new int[]{6,0});
+        bQueens[1] = new Queen(new int[]{6,9});
         bQueens[2] = new Queen(new int[]{9,3});
         bQueens[3] = new Queen(new int[]{9,6});
         
@@ -72,39 +80,83 @@ public class BoardGameModel {
     }
     
     //Creates board state given the previous board state, the coordiantes of the queen just moved, the new coordinates of the queen just moved and the coordinates of the just-fired arrow.
-    public BoardGameModel(BoardGameModel prev, int[] qPrev, int[] qNow, int[] arrow){
-        board = prev.getBoard();
+    public BoardGameModel(BoardGameModel prev, int qPrevX, int qPrevY, int qNowX,  int qNowY, int arrowX, int arrowY){
+        board = new String[10][10];
+        for(int i = 0; i < 10; i++){
+            for(int j = 0; j < 10; j++){
+                board[i][j] = prev.getBoard()[i][j];
+            }
+        }
         whiteTurn = !prev.getWhiteTurn();
         wQueens = prev.getWhiteQueens();
         bQueens = prev.getBlackQueens();
         
-        int activeQueen;
+        int[] activeQueen;
         
         if(whiteTurn == true){
             for(int i = 0; i < 4; i++){
-                if(Arrays.equals(wQueens[i].getPosition(), qPrev)){
-                    activeQueen = i;
-                    wQueens[i] = new Queen(new int[]{qNow[0], qNow[1]});
+                activeQueen = wQueens[i].getPosition();
+                if(activeQueen[0] == qPrevX && activeQueen[1] == qPrevY){
+                    wQueens[i] = new Queen(new int[]{qNowX, qNowY});
                     break;
                 }
             }
         }else{
              for(int i = 0; i < 4; i++){
-                if(Arrays.equals(bQueens[i].getPosition(), qPrev)){
-                    activeQueen = i;
-                    bQueens[i] = new Queen(new int[]{qNow[0], qNow[1]});
+                activeQueen = bQueens[i].getPosition();
+                if(activeQueen[0] == qPrevX && activeQueen[1] == qPrevY){
+                    bQueens[i] = new Queen(new int[]{qNowX, qNowY});
                     break;
                 }
             }
         }
         
-        board[qPrev[0]][qPrev[1]] = POS_AVAILABLE;
-        board[arrow[0]][arrow[1]] = POS_MARKED_ARROW;
+        board[qPrevX][qPrevY] = POS_AVAILABLE;
+        board[arrowX][arrowY] = POS_MARKED_ARROW;
         
-        movedQueenPrevious = qPrev;
-        movedQueenNow = qNow;
-        firedArrow = arrow;
+        movedQueenPreviousX = qPrevX;
+        movedQueenPreviousY = qPrevY;
+        movedQueenNowX = qNowX;
+        movedQueenNowY = qNowY;
+        firedArrowX = arrowX;
+        firedArrowY = arrowY;
     }
+    
+    public boolean positionMarked(int row, int column, int arow, int acol, int qfr, int qfc, boolean opponentMove){
+    		boolean valid = true;
+    		
+     
+    		
+    		if(row >= board.length | column >= board.length 
+    				 || row <= 0 || column <= 0){
+    			valid = false;
+    		}
+    		else if (!board[row][column].equalsIgnoreCase(POS_AVAILABLE)){
+    			valid = false;
+    		}
+            
+    		if(valid){
+    			board[row][column] = board[qfr][qfc];		
+    			board[qfr][qfc] = POS_AVAILABLE;		
+    			board[arow][acol] = POS_MARKED_ARROW;
+    		}
+    		
+    		//System.out.println(this.toString());
+    		
+    		return valid;
+    	}	
+    
+    public String toString(String[][] gameBoard){
+          String b = null;
+
+          for(int i = 1; i < 11; i++){
+    	      for(int j = 1; j< 11; j++){
+    		b = b + gameBoard[i][j] + " ";
+    	      }
+    	      b = b + "\n";
+          }  	  
+          return b;
+        }
     
     public String[][] getBoard(){
         return this.board;
@@ -123,6 +175,11 @@ public class BoardGameModel {
     }
     
     public int getEvaluation(){
+        return evaluation;
+    }
+    
+    public int evaluate(){
+        evaluation = (int)(Math.random() * 100);
         return evaluation;
     }
     

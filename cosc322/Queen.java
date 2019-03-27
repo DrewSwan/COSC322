@@ -28,7 +28,7 @@ import ygraphs.ai.smart_fox.games.GamePlayer;
  *
  * @author drews
  */
-public class Queen {
+public class Queen{
     String colour;
     int[] position = new int[2];
     
