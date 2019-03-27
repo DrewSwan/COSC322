@@ -35,6 +35,14 @@ public class tileBWValue {
 		return value;
 	}
 
+	public String[][] prt(String[][] b) {
+		String[][] temp = b;
+		tileBWValue(temp);
+		temp = tempB;
+		return temp;
+
+	}
+
 	/**
 	 * 
 	 * tempB will become a board showing who owns each space "white" = white owns
@@ -60,6 +68,7 @@ public class tileBWValue {
 
 		int r = 1;
 		int c = 1;
+		more = false;
 
 		boolean wOwn = false;
 		boolean bOwn = false;
@@ -71,113 +80,116 @@ public class tileBWValue {
 				bOwn = false;
 				// Find empty spaces
 				if (tempB[i][j].equalsIgnoreCase("available")) {
-					// Check each move direction for queen or arrow
-					// if only one colour queen found, they own space
-					// if both then contested, neither player owns
-					while (j + c < 10) {
-						if (tempB[i][j + c].equalsIgnoreCase("available")) {
-							c++;
-						} else if (tempB[i][j + c].equalsIgnoreCase("arrow")) {
-							break;
-						} else if (tempB[i][j + c].equalsIgnoreCase("white")) {
-							wOwn = true;
-						} else if (tempB[i][j + c].equalsIgnoreCase("black")) {
-							bOwn = true;
+					while (wOwn == false && bOwn == false) {
+						// Check each move direction for queen or arrow
+						// if only one colour queen found, they own space
+						// if both then contested, neither player owns
+						while (j + c < 10) {
+							if (tempB[i][j + c].equalsIgnoreCase("available")) {
+								c++;
+							} else if (tempB[i][j + c].equalsIgnoreCase("arrow")) {
+								break;
+							} else if (tempB[i][j + c].equalsIgnoreCase("white")) {
+								wOwn = true;
+							} else if (tempB[i][j + c].equalsIgnoreCase("black")) {
+								bOwn = true;
+							}
 						}
-					}
-					c = 1;
-					while (j - c >= 0) {
-						if (tempB[i][j - c].equalsIgnoreCase("available")) {
-							c++;
-						} else if (tempB[i][j - c].equalsIgnoreCase("arrow")) {
-							break;
-						} else if (tempB[i][j - c].equalsIgnoreCase("white")) {
-							wOwn = true;
-						} else if (tempB[i][j - c].equalsIgnoreCase("black")) {
-							bOwn = true;
+
+						c = 1;
+						while (j - c >= 0) {
+							if (tempB[i][j - c].equalsIgnoreCase("available")) {
+								c++;
+							} else if (tempB[i][j - c].equalsIgnoreCase("arrow")) {
+								break;
+							} else if (tempB[i][j - c].equalsIgnoreCase("white")) {
+								wOwn = true;
+							} else if (tempB[i][j - c].equalsIgnoreCase("black")) {
+								bOwn = true;
+							}
 						}
-					}
-					c = 1;
-					while (i + r < 10) {
-						if (tempB[i + r][j].equalsIgnoreCase("available")) {
-							r++;
-						} else if (tempB[i + r][j].equalsIgnoreCase("arrow")) {
-							break;
-						} else if (tempB[i + r][j].equalsIgnoreCase("white")) {
-							wOwn = true;
-						} else if (tempB[i + r][j].equalsIgnoreCase("black")) {
-							bOwn = true;
+						c = 1;
+						while (i + r < 10) {
+							if (tempB[i + r][j].equalsIgnoreCase("available")) {
+								r++;
+							} else if (tempB[i + r][j].equalsIgnoreCase("arrow")) {
+								break;
+							} else if (tempB[i + r][j].equalsIgnoreCase("white")) {
+								wOwn = true;
+							} else if (tempB[i + r][j].equalsIgnoreCase("black")) {
+								bOwn = true;
+							}
 						}
-					}
-					r = 1;
-					while (i - r >= 0) {
-						if (tempB[i - r][j].equalsIgnoreCase("available")) {
-							r++;
-						} else if (tempB[i - r][j].equalsIgnoreCase("arrow")) {
-							break;
-						} else if (tempB[i - r][j].equalsIgnoreCase("white")) {
-							wOwn = true;
-						} else if (tempB[i - r][j].equalsIgnoreCase("black")) {
-							bOwn = true;
+						r = 1;
+						while (i - r >= 0) {
+							if (tempB[i - r][j].equalsIgnoreCase("available")) {
+								r++;
+							} else if (tempB[i - r][j].equalsIgnoreCase("arrow")) {
+								break;
+							} else if (tempB[i - r][j].equalsIgnoreCase("white")) {
+								wOwn = true;
+							} else if (tempB[i - r][j].equalsIgnoreCase("black")) {
+								bOwn = true;
+							}
 						}
-					}
-					r = 1;
-					while (j + c < 10 && i + r < 10) {
-						if (tempB[i + r][j + c].equalsIgnoreCase("available")) {
-							c++;
-							r++;
-						} else if (tempB[i + r][j + c].equalsIgnoreCase("arrow")) {
-							break;
-						} else if (tempB[i + r][j + c].equalsIgnoreCase("white")) {
-							wOwn = true;
-						} else if (tempB[i + r][j + c].equalsIgnoreCase("black")) {
-							bOwn = true;
+						r = 1;
+						while (j + c < 10 && i + r < 10) {
+							if (tempB[i + r][j + c].equalsIgnoreCase("available")) {
+								c++;
+								r++;
+							} else if (tempB[i + r][j + c].equalsIgnoreCase("arrow")) {
+								break;
+							} else if (tempB[i + r][j + c].equalsIgnoreCase("white")) {
+								wOwn = true;
+							} else if (tempB[i + r][j + c].equalsIgnoreCase("black")) {
+								bOwn = true;
+							}
 						}
-					}
-					c = 1;
-					r = 1;
-					while (j + c < 10 && i - r >= 0) {
-						if (tempB[i - r][j + c].equalsIgnoreCase("available")) {
-							c++;
-							r++;
-						} else if (tempB[i - r][j + c].equalsIgnoreCase("arrow")) {
-							break;
-						} else if (tempB[i - r][j + c].equalsIgnoreCase("white")) {
-							wOwn = true;
-						} else if (tempB[i - r][j + c].equalsIgnoreCase("black")) {
-							bOwn = true;
+						c = 1;
+						r = 1;
+						while (j + c < 10 && i - r >= 0) {
+							if (tempB[i - r][j + c].equalsIgnoreCase("available")) {
+								c++;
+								r++;
+							} else if (tempB[i - r][j + c].equalsIgnoreCase("arrow")) {
+								break;
+							} else if (tempB[i - r][j + c].equalsIgnoreCase("white")) {
+								wOwn = true;
+							} else if (tempB[i - r][j + c].equalsIgnoreCase("black")) {
+								bOwn = true;
+							}
 						}
-					}
-					c = 1;
-					r = 1;
-					while (j - c >= 0 && i + r < 10) {
-						if (tempB[i + r][j - c].equalsIgnoreCase("available")) {
-							c++;
-							r++;
-						} else if (tempB[i + r][j - c].equalsIgnoreCase("arrow")) {
-							break;
-						} else if (tempB[i + r][j - c].equalsIgnoreCase("white")) {
-							wOwn = true;
-						} else if (tempB[i + r][j - c].equalsIgnoreCase("black")) {
-							bOwn = true;
+						c = 1;
+						r = 1;
+						while (j - c >= 0 && i + r < 10) {
+							if (tempB[i + r][j - c].equalsIgnoreCase("available")) {
+								c++;
+								r++;
+							} else if (tempB[i + r][j - c].equalsIgnoreCase("arrow")) {
+								break;
+							} else if (tempB[i + r][j - c].equalsIgnoreCase("white")) {
+								wOwn = true;
+							} else if (tempB[i + r][j - c].equalsIgnoreCase("black")) {
+								bOwn = true;
+							}
 						}
-					}
-					c = 1;
-					r = 1;
-					while (j - c >= 0 && i - r >= 0) {
-						if (tempB[i - r][j - c].equalsIgnoreCase("available")) {
-							c++;
-							r++;
-						} else if (tempB[i - r][j - c].equalsIgnoreCase("arrow")) {
-							break;
-						} else if (tempB[i - r][j - c].equalsIgnoreCase("white")) {
-							wOwn = true;
-						} else if (tempB[i - r][j - c].equalsIgnoreCase("black")) {
-							bOwn = true;
+						c = 1;
+						r = 1;
+						while (j - c >= 0 && i - r >= 0) {
+							if (tempB[i - r][j - c].equalsIgnoreCase("available")) {
+								c++;
+								r++;
+							} else if (tempB[i - r][j - c].equalsIgnoreCase("arrow")) {
+								break;
+							} else if (tempB[i - r][j - c].equalsIgnoreCase("white")) {
+								wOwn = true;
+							} else if (tempB[i - r][j - c].equalsIgnoreCase("black")) {
+								bOwn = true;
+							}
 						}
+						c = 1;
+						r = 1;
 					}
-					c = 1;
-					r = 1;
 				} else {
 					// do nothing, go to next tile
 				}
@@ -199,8 +211,7 @@ public class tileBWValue {
 
 		/***
 		 * Checks if any spaces connected to unknown space have an owner, indicating
-		 * that owner is 3 moves away
-		 * "unknown" = needs 2 or more moves to own
+		 * that owner is 3 moves away "unknown" = needs 2 or more moves to own
 		 */
 		if (more == true) {
 			more = false;
@@ -211,134 +222,136 @@ public class tileBWValue {
 					boolean w2 = false;
 					// Find empty spaces
 					if (tempB[i][j].equalsIgnoreCase("unknown")) {
-						while (j + c < 10) {
-							if (tempB[i][j + c].equalsIgnoreCase("unknown")) {
-								c++;
-							} else if (tempB[i][j + c].equalsIgnoreCase("arrow")) {
-								break;
-							} else if (tempB[i][j + c].equalsIgnoreCase("white")) {
-								w2 = true;
-							} else if (tempB[i][j + c].equalsIgnoreCase("black")) {
-								b2 = true;
-							} else if (tempB[i][j + c].equalsIgnoreCase("tie1move")) {
-								b2 = true;
-								w2 = true;
+						while (w2 == false && b2 == false) {
+							while (j + c < 10) {
+								if (tempB[i][j + c].equalsIgnoreCase("unknown")) {
+									c++;
+								} else if (tempB[i][j + c].equalsIgnoreCase("arrow")) {
+									break;
+								} else if (tempB[i][j + c].equalsIgnoreCase("white")) {
+									w2 = true;
+								} else if (tempB[i][j + c].equalsIgnoreCase("black")) {
+									b2 = true;
+								} else if (tempB[i][j + c].equalsIgnoreCase("tie1move")) {
+									b2 = true;
+									w2 = true;
+								}
 							}
-						}
-						c = 1;
-						while (j - c >= 0) {
-							if (tempB[i][j - c].equalsIgnoreCase("unknown")) {
-								c++;
-							} else if (tempB[i][j - c].equalsIgnoreCase("arrow")) {
-								break;
-							} else if (tempB[i][j - c].equalsIgnoreCase("white")) {
-								w2 = true;
-							} else if (tempB[i][j - c].equalsIgnoreCase("black")) {
-								b2 = true;
-							} else if (tempB[i][j - c].equalsIgnoreCase("tie1move")) {
-								b2 = true;
-								w2 = true;
+							c = 1;
+							while (j - c >= 0) {
+								if (tempB[i][j - c].equalsIgnoreCase("unknown")) {
+									c++;
+								} else if (tempB[i][j - c].equalsIgnoreCase("arrow")) {
+									break;
+								} else if (tempB[i][j - c].equalsIgnoreCase("white")) {
+									w2 = true;
+								} else if (tempB[i][j - c].equalsIgnoreCase("black")) {
+									b2 = true;
+								} else if (tempB[i][j - c].equalsIgnoreCase("tie1move")) {
+									b2 = true;
+									w2 = true;
+								}
 							}
-						}
-						c = 1;
-						while (i + r < 10) {
-							if (tempB[i + r][j].equalsIgnoreCase("unknown")) {
-								r++;
-							} else if (tempB[i + r][j].equalsIgnoreCase("arrow")) {
-								break;
-							} else if (tempB[i + r][j].equalsIgnoreCase("white")) {
-								w2 = true;
-							} else if (tempB[i + r][j].equalsIgnoreCase("black")) {
-								b2 = true;
-							} else if (tempB[i + r][j].equalsIgnoreCase("tie1move")) {
-								b2 = true;
-								w2 = true;
+							c = 1;
+							while (i + r < 10) {
+								if (tempB[i + r][j].equalsIgnoreCase("unknown")) {
+									r++;
+								} else if (tempB[i + r][j].equalsIgnoreCase("arrow")) {
+									break;
+								} else if (tempB[i + r][j].equalsIgnoreCase("white")) {
+									w2 = true;
+								} else if (tempB[i + r][j].equalsIgnoreCase("black")) {
+									b2 = true;
+								} else if (tempB[i + r][j].equalsIgnoreCase("tie1move")) {
+									b2 = true;
+									w2 = true;
+								}
 							}
-						}
-						r = 1;
-						while (i - r >= 0) {
-							if (tempB[i - r][j].equalsIgnoreCase("unknown")) {
-								r++;
-							} else if (tempB[i - r][j].equalsIgnoreCase("arrow")) {
-								break;
-							} else if (tempB[i - r][j].equalsIgnoreCase("white")) {
-								w2 = true;
-							} else if (tempB[i - r][j].equalsIgnoreCase("black")) {
-								b2 = true;
-							} else if (tempB[i - r][j].equalsIgnoreCase("tie1move")) {
-								b2 = true;
-								w2 = true;
+							r = 1;
+							while (i - r >= 0) {
+								if (tempB[i - r][j].equalsIgnoreCase("unknown")) {
+									r++;
+								} else if (tempB[i - r][j].equalsIgnoreCase("arrow")) {
+									break;
+								} else if (tempB[i - r][j].equalsIgnoreCase("white")) {
+									w2 = true;
+								} else if (tempB[i - r][j].equalsIgnoreCase("black")) {
+									b2 = true;
+								} else if (tempB[i - r][j].equalsIgnoreCase("tie1move")) {
+									b2 = true;
+									w2 = true;
+								}
 							}
-						}
-						r = 1;
-						while (j + c < 10 && i + r < 10) {
-							if (tempB[i + r][j + c].equalsIgnoreCase("unknown")) {
-								c++;
-								r++;
-							} else if (tempB[i + r][j + c].equalsIgnoreCase("arrow")) {
-								break;
-							} else if (tempB[i + r][j + c].equalsIgnoreCase("white")) {
-								w2 = true;
-							} else if (tempB[i + r][j + c].equalsIgnoreCase("black")) {
-								b2 = true;
-							} else if (tempB[i + r][j + c].equalsIgnoreCase("tie1move")) {
-								b2 = true;
-								w2 = true;
+							r = 1;
+							while (j + c < 10 && i + r < 10) {
+								if (tempB[i + r][j + c].equalsIgnoreCase("unknown")) {
+									c++;
+									r++;
+								} else if (tempB[i + r][j + c].equalsIgnoreCase("arrow")) {
+									break;
+								} else if (tempB[i + r][j + c].equalsIgnoreCase("white")) {
+									w2 = true;
+								} else if (tempB[i + r][j + c].equalsIgnoreCase("black")) {
+									b2 = true;
+								} else if (tempB[i + r][j + c].equalsIgnoreCase("tie1move")) {
+									b2 = true;
+									w2 = true;
+								}
 							}
-						}
-						c = 1;
-						r = 1;
-						while (j + c < 10 && i - r >= 0) {
-							if (tempB[i - r][j + c].equalsIgnoreCase("unknown")) {
-								c++;
-								r++;
-							} else if (tempB[i - r][j + c].equalsIgnoreCase("arrow")) {
-								break;
-							} else if (tempB[i - r][j + c].equalsIgnoreCase("white")) {
-								w2 = true;
-							} else if (tempB[i - r][j + c].equalsIgnoreCase("black")) {
-								b2 = true;
-							} else if (tempB[i - r][j + c].equalsIgnoreCase("tie1move")) {
-								b2 = true;
-								w2 = true;
+							c = 1;
+							r = 1;
+							while (j + c < 10 && i - r >= 0) {
+								if (tempB[i - r][j + c].equalsIgnoreCase("unknown")) {
+									c++;
+									r++;
+								} else if (tempB[i - r][j + c].equalsIgnoreCase("arrow")) {
+									break;
+								} else if (tempB[i - r][j + c].equalsIgnoreCase("white")) {
+									w2 = true;
+								} else if (tempB[i - r][j + c].equalsIgnoreCase("black")) {
+									b2 = true;
+								} else if (tempB[i - r][j + c].equalsIgnoreCase("tie1move")) {
+									b2 = true;
+									w2 = true;
+								}
 							}
-						}
-						c = 1;
-						r = 1;
-						while (j - c >= 0 && i + r < 10) {
-							if (tempB[i + r][j - c].equalsIgnoreCase("unknown")) {
-								c++;
-								r++;
-							} else if (tempB[i + r][j - c].equalsIgnoreCase("arrow")) {
-								break;
-							} else if (tempB[i + r][j - c].equalsIgnoreCase("white")) {
-								w2 = true;
-							} else if (tempB[i + r][j - c].equalsIgnoreCase("black")) {
-								b2 = true;
-							} else if (tempB[i + r][j - c].equalsIgnoreCase("tie1move")) {
-								b2 = true;
-								w2 = true;
+							c = 1;
+							r = 1;
+							while (j - c >= 0 && i + r < 10) {
+								if (tempB[i + r][j - c].equalsIgnoreCase("unknown")) {
+									c++;
+									r++;
+								} else if (tempB[i + r][j - c].equalsIgnoreCase("arrow")) {
+									break;
+								} else if (tempB[i + r][j - c].equalsIgnoreCase("white")) {
+									w2 = true;
+								} else if (tempB[i + r][j - c].equalsIgnoreCase("black")) {
+									b2 = true;
+								} else if (tempB[i + r][j - c].equalsIgnoreCase("tie1move")) {
+									b2 = true;
+									w2 = true;
+								}
 							}
-						}
-						c = 1;
-						r = 1;
-						while (j - c >= 0 && i - r >= 0) {
-							if (tempB[i - r][j - c].equalsIgnoreCase("unknown")) {
-								c++;
-								r++;
-							} else if (tempB[i - r][j - c].equalsIgnoreCase("arrow")) {
-								break;
-							} else if (tempB[i - r][j - c].equalsIgnoreCase("white")) {
-								w2 = true;
-							} else if (tempB[i - r][j - c].equalsIgnoreCase("black")) {
-								b2 = true;
-							} else if (tempB[i - r][j - c].equalsIgnoreCase("tie1move")) {
-								b2 = true;
-								w2 = true;
+							c = 1;
+							r = 1;
+							while (j - c >= 0 && i - r >= 0) {
+								if (tempB[i - r][j - c].equalsIgnoreCase("unknown")) {
+									c++;
+									r++;
+								} else if (tempB[i - r][j - c].equalsIgnoreCase("arrow")) {
+									break;
+								} else if (tempB[i - r][j - c].equalsIgnoreCase("white")) {
+									w2 = true;
+								} else if (tempB[i - r][j - c].equalsIgnoreCase("black")) {
+									b2 = true;
+								} else if (tempB[i - r][j - c].equalsIgnoreCase("tie1move")) {
+									b2 = true;
+									w2 = true;
+								}
 							}
+							c = 1;
+							r = 1;
 						}
-						c = 1;
-						r = 1;
 					} else {
 						// do nothing, go to next tile
 					}
@@ -370,134 +383,136 @@ public class tileBWValue {
 						boolean w3 = false;
 						// Find empty spaces
 						if (tempB[i][j].equalsIgnoreCase("3+ Moves Away")) {
-							while (j + c < 10) {
-								if (tempB[i][j + c].equalsIgnoreCase("3+ Moves Away")) {
-									c++;
-								} else if (tempB[i][j + c].equalsIgnoreCase("arrow")) {
-									break;
-								} else if (tempB[i][j + c].equalsIgnoreCase("white")) {
-									w3 = true;
-								} else if (tempB[i][j + c].equalsIgnoreCase("black")) {
-									b3 = true;
-								} else if (tempB[i][j + c].equalsIgnoreCase("tied")) {
-									b3 = true;
-									w3 = true;
+							while (w3 == false && b3 == false) {
+								while (j + c < 10) {
+									if (tempB[i][j + c].equalsIgnoreCase("3+ Moves Away")) {
+										c++;
+									} else if (tempB[i][j + c].equalsIgnoreCase("arrow")) {
+										break;
+									} else if (tempB[i][j + c].equalsIgnoreCase("white")) {
+										w3 = true;
+									} else if (tempB[i][j + c].equalsIgnoreCase("black")) {
+										b3 = true;
+									} else if (tempB[i][j + c].equalsIgnoreCase("tied")) {
+										b3 = true;
+										w3 = true;
+									}
 								}
-							}
-							c = 1;
-							while (j - c >= 0) {
-								if (tempB[i][j - c].equalsIgnoreCase("3+ Moves Away")) {
-									c++;
-								} else if (tempB[i][j - c].equalsIgnoreCase("arrow")) {
-									break;
-								} else if (tempB[i][j - c].equalsIgnoreCase("white")) {
-									w3 = true;
-								} else if (tempB[i][j - c].equalsIgnoreCase("black")) {
-									b3 = true;
-								} else if (tempB[i][j - c].equalsIgnoreCase("tied")) {
-									b3 = true;
-									w3 = true;
+								c = 1;
+								while (j - c >= 0) {
+									if (tempB[i][j - c].equalsIgnoreCase("3+ Moves Away")) {
+										c++;
+									} else if (tempB[i][j - c].equalsIgnoreCase("arrow")) {
+										break;
+									} else if (tempB[i][j - c].equalsIgnoreCase("white")) {
+										w3 = true;
+									} else if (tempB[i][j - c].equalsIgnoreCase("black")) {
+										b3 = true;
+									} else if (tempB[i][j - c].equalsIgnoreCase("tied")) {
+										b3 = true;
+										w3 = true;
+									}
 								}
-							}
-							c = 1;
-							while (i + r < 10) {
-								if (tempB[i + r][j].equalsIgnoreCase("3+ Moves Away")) {
-									r++;
-								} else if (tempB[i + r][j].equalsIgnoreCase("arrow")) {
-									break;
-								} else if (tempB[i + r][j].equalsIgnoreCase("white")) {
-									w3 = true;
-								} else if (tempB[i + r][j].equalsIgnoreCase("black")) {
-									b3 = true;
-								} else if (tempB[i + r][j].equalsIgnoreCase("tied")) {
-									b3 = true;
-									w3 = true;
+								c = 1;
+								while (i + r < 10) {
+									if (tempB[i + r][j].equalsIgnoreCase("3+ Moves Away")) {
+										r++;
+									} else if (tempB[i + r][j].equalsIgnoreCase("arrow")) {
+										break;
+									} else if (tempB[i + r][j].equalsIgnoreCase("white")) {
+										w3 = true;
+									} else if (tempB[i + r][j].equalsIgnoreCase("black")) {
+										b3 = true;
+									} else if (tempB[i + r][j].equalsIgnoreCase("tied")) {
+										b3 = true;
+										w3 = true;
+									}
 								}
-							}
-							r = 1;
-							while (i - r >= 0) {
-								if (tempB[i - r][j].equalsIgnoreCase("3+ Moves Away")) {
-									r++;
-								} else if (tempB[i - r][j].equalsIgnoreCase("arrow")) {
-									break;
-								} else if (tempB[i - r][j].equalsIgnoreCase("white")) {
-									w3 = true;
-								} else if (tempB[i - r][j].equalsIgnoreCase("black")) {
-									b3 = true;
-								} else if (tempB[i - r][j].equalsIgnoreCase("tied")) {
-									b3 = true;
-									w3 = true;
+								r = 1;
+								while (i - r >= 0) {
+									if (tempB[i - r][j].equalsIgnoreCase("3+ Moves Away")) {
+										r++;
+									} else if (tempB[i - r][j].equalsIgnoreCase("arrow")) {
+										break;
+									} else if (tempB[i - r][j].equalsIgnoreCase("white")) {
+										w3 = true;
+									} else if (tempB[i - r][j].equalsIgnoreCase("black")) {
+										b3 = true;
+									} else if (tempB[i - r][j].equalsIgnoreCase("tied")) {
+										b3 = true;
+										w3 = true;
+									}
 								}
-							}
-							r = 1;
-							while (j + c < 10 && i + r < 10) {
-								if (tempB[i + r][j + c].equalsIgnoreCase("3+ Moves Away")) {
-									c++;
-									r++;
-								} else if (tempB[i + r][j + c].equalsIgnoreCase("arrow")) {
-									break;
-								} else if (tempB[i + r][j + c].equalsIgnoreCase("white")) {
-									w3 = true;
-								} else if (tempB[i + r][j + c].equalsIgnoreCase("black")) {
-									b3 = true;
-								} else if (tempB[i + r][j + c].equalsIgnoreCase("tied")) {
-									b3 = true;
-									w3 = true;
+								r = 1;
+								while (j + c < 10 && i + r < 10) {
+									if (tempB[i + r][j + c].equalsIgnoreCase("3+ Moves Away")) {
+										c++;
+										r++;
+									} else if (tempB[i + r][j + c].equalsIgnoreCase("arrow")) {
+										break;
+									} else if (tempB[i + r][j + c].equalsIgnoreCase("white")) {
+										w3 = true;
+									} else if (tempB[i + r][j + c].equalsIgnoreCase("black")) {
+										b3 = true;
+									} else if (tempB[i + r][j + c].equalsIgnoreCase("tied")) {
+										b3 = true;
+										w3 = true;
+									}
 								}
-							}
-							c = 1;
-							r = 1;
-							while (j + c < 10 && i - r >= 0) {
-								if (tempB[i - r][j + c].equalsIgnoreCase("3+ Moves Away")) {
-									c++;
-									r++;
-								} else if (tempB[i - r][j + c].equalsIgnoreCase("arrow")) {
-									break;
-								} else if (tempB[i - r][j + c].equalsIgnoreCase("white")) {
-									w3 = true;
-								} else if (tempB[i - r][j + c].equalsIgnoreCase("black")) {
-									b3 = true;
-								} else if (tempB[i - r][j + c].equalsIgnoreCase("tied")) {
-									b3 = true;
-									w3 = true;
+								c = 1;
+								r = 1;
+								while (j + c < 10 && i - r >= 0) {
+									if (tempB[i - r][j + c].equalsIgnoreCase("3+ Moves Away")) {
+										c++;
+										r++;
+									} else if (tempB[i - r][j + c].equalsIgnoreCase("arrow")) {
+										break;
+									} else if (tempB[i - r][j + c].equalsIgnoreCase("white")) {
+										w3 = true;
+									} else if (tempB[i - r][j + c].equalsIgnoreCase("black")) {
+										b3 = true;
+									} else if (tempB[i - r][j + c].equalsIgnoreCase("tied")) {
+										b3 = true;
+										w3 = true;
+									}
 								}
-							}
-							c = 1;
-							r = 1;
-							while (j - c >= 0 && i + r < 10) {
-								if (tempB[i + r][j - c].equalsIgnoreCase("3+ Moves Away")) {
-									c++;
-									r++;
-								} else if (tempB[i + r][j - c].equalsIgnoreCase("arrow")) {
-									break;
-								} else if (tempB[i + r][j - c].equalsIgnoreCase("white")) {
-									w3 = true;
-								} else if (tempB[i + r][j - c].equalsIgnoreCase("black")) {
-									b3 = true;
-								} else if (tempB[i + r][j - c].equalsIgnoreCase("tied")) {
-									b3 = true;
-									w3 = true;
+								c = 1;
+								r = 1;
+								while (j - c >= 0 && i + r < 10) {
+									if (tempB[i + r][j - c].equalsIgnoreCase("3+ Moves Away")) {
+										c++;
+										r++;
+									} else if (tempB[i + r][j - c].equalsIgnoreCase("arrow")) {
+										break;
+									} else if (tempB[i + r][j - c].equalsIgnoreCase("white")) {
+										w3 = true;
+									} else if (tempB[i + r][j - c].equalsIgnoreCase("black")) {
+										b3 = true;
+									} else if (tempB[i + r][j - c].equalsIgnoreCase("tied")) {
+										b3 = true;
+										w3 = true;
+									}
 								}
-							}
-							c = 1;
-							r = 1;
-							while (j - c >= 0 && i - r >= 0) {
-								if (tempB[i - r][j - c].equalsIgnoreCase("3+ Moves Away")) {
-									c++;
-									r++;
-								} else if (tempB[i - r][j - c].equalsIgnoreCase("arrow")) {
-									break;
-								} else if (tempB[i - r][j - c].equalsIgnoreCase("white")) {
-									w3 = true;
-								} else if (tempB[i - r][j - c].equalsIgnoreCase("black")) {
-									b3 = true;
-								} else if (tempB[i - r][j - c].equalsIgnoreCase("tied")) {
-									b3 = true;
-									w3 = true;
+								c = 1;
+								r = 1;
+								while (j - c >= 0 && i - r >= 0) {
+									if (tempB[i - r][j - c].equalsIgnoreCase("3+ Moves Away")) {
+										c++;
+										r++;
+									} else if (tempB[i - r][j - c].equalsIgnoreCase("arrow")) {
+										break;
+									} else if (tempB[i - r][j - c].equalsIgnoreCase("white")) {
+										w3 = true;
+									} else if (tempB[i - r][j - c].equalsIgnoreCase("black")) {
+										b3 = true;
+									} else if (tempB[i - r][j - c].equalsIgnoreCase("tied")) {
+										b3 = true;
+										w3 = true;
+									}
 								}
+								c = 1;
+								r = 1;
 							}
-							c = 1;
-							r = 1;
 						} else {
 							// do nothing, go to next tile
 						}
@@ -512,12 +527,12 @@ public class tileBWValue {
 							tempB[i][j] = "black";
 						} else {
 							tempB[i][j] = ">3 moves away";
-							more = true;
+							// more = true;
 						}
 					}
 				} // End of board scan #3
 			}
-			//unnecessary?
+			// unnecessary?
 			more = false;
 		}
 	}// End of tileBWValue(String b) function
