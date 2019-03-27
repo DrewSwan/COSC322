@@ -17,6 +17,10 @@ public class tileBWValue {
 	public int wh;
 	public int bl;
 	public boolean more = false;
+	
+	tileBWValue(){
+		
+	}
 
 	// If player is white, returns eval value based on wh ownership - black
 	// ownership
@@ -72,7 +76,7 @@ public class tileBWValue {
 			}
 		}
 
-		System.out.println("\n\n");
+		//System.out.println("\n\n");
 		// wh = spaces white "own"
 		// bl = spaces black "own"
 		wh = 0;
@@ -268,7 +272,9 @@ public class tileBWValue {
 					wOwn = true;
 					bOwn = false;
 				} else {
-					System.out.println("ERROR1");
+					//System.out.println("ERROR1");
+					wOwn = true;
+					bOwn = true;
 				}
 
 				// Label tiles with ownership or unknown

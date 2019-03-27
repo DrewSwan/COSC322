@@ -61,6 +61,7 @@ public class COSC322Test extends GamePlayer {
 		// message
 		// from the server.
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
+			
 			// BoardGameModel gboard = new BoardGameModel();
 			// BoardGameModel();
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
@@ -74,7 +75,7 @@ public class COSC322Test extends GamePlayer {
 			}
 
 		} else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
-			System.out.println("AAA");
+			//System.out.println("AAA");
 			handleOpponentMove(msgDetails);
 		}
 
@@ -107,6 +108,8 @@ public class COSC322Test extends GamePlayer {
 	public void ourMove() {
 		System.out.println("Calculating Move");
 		ourTurn = true;
+		
+		board.gameModel.whiteTurn = true;
 
 		long startTime = System.currentTimeMillis();
 
@@ -149,13 +152,13 @@ public class COSC322Test extends GamePlayer {
 					currentDepth
 							.add(a.createChild(new BoardGameModel(currentBoard, m.qx, m.qy, m.nx, m.ny, m.ax, m.ay)));
 				}
-				if (System.currentTimeMillis() - startTime > 20000) {
+				if (System.currentTimeMillis() - startTime > 5000) {
 					break;
 				}
 
 				// System.out.println("i = " + i + ", y = " + y++);
 			}
-			if (System.currentTimeMillis() - startTime > 20000) {
+			if (System.currentTimeMillis() - startTime > 5000) {
 				break;
 			}
 			moveGenerator.depthNodes.add(currentDepth);
@@ -182,7 +185,9 @@ public class COSC322Test extends GamePlayer {
 		int[] ar = new int[2];
 		ar[0] = arow;
 		ar[1] = acol;
-
+		System.out.println(x+","+y);
+		board.gameModel = new BoardGameModel(board.gameModel,qfr-1,qfc-1,x-1,y-1,arow-1,acol-1);
+		board.repaint();
 		this.gameClient.sendMoveMessage(qf, qn, ar);
 
 	}
@@ -314,7 +319,7 @@ public class COSC322Test extends GamePlayer {
 						+ ",NowX " + (bestMove.movedQueenNowX + 1) + ",NowY " + (bestMove.movedQueenNowY + 1));
 		playerMove(bestMove.movedQueenNowX + 1, bestMove.movedQueenNowY + 1, bestMove.firedArrowX + 1,
 				bestMove.firedArrowY + 1, bestMove.movedQueenPreviousX + 1, bestMove.movedQueenPreviousY + 1);
-
+		//playerMove(int x, int y, int arow, int acol, int qfr, int qfc)
 		/***
 		 * 
 		 * MARCH 27: This is where the only error lies Need to call boolean validMove in

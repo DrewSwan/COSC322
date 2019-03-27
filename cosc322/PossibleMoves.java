@@ -8,7 +8,7 @@ public class PossibleMoves
 {
   public ArrayList<move> movelist;
   String[][] board = new String[10][10];
-  private boolean white = false;
+  private boolean white;
   Queen[] wQueens;
   Queen[] bQueens;
   
