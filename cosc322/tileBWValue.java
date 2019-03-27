@@ -345,10 +345,10 @@ public class tileBWValue {
 					// Label tiles with ownership or unknown
 					if (w2 == true && b2 == true) {
 						tempB[i][j] = "tied";
-					} else if (wOwn == true && bOwn == false) {
+					} else if (w2 == true && b2 == false) {
 						wh = wh + 1;
 						tempB[i][j] = "white";
-					} else if (wOwn == false && bOwn == true) {
+					} else if (w2 == false && b2 == true) {
 						bl = bl + 1;
 						tempB[i][j] = "black";
 					} else {
@@ -504,10 +504,10 @@ public class tileBWValue {
 						// Label tiles with ownership or unknown
 						if (w3 == true && b3 == true) {
 							tempB[i][j] = "tied";
-						} else if (wOwn == true && bOwn == false) {
+						} else if (w3 == true && b3 == false) {
 							wh = wh + 1;
 							tempB[i][j] = "white";
-						} else if (wOwn == false && bOwn == true) {
+						} else if (w3 == false && b3 == true) {
 							bl = bl + 1;
 							tempB[i][j] = "black";
 						} else {
