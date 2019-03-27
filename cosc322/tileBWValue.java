@@ -35,6 +35,7 @@ public class tileBWValue {
 		return value;
 	}
 
+	//Used for testing
 	public String[][] prt(String[][] b) {
 		String[][] temp = b;
 		tileBWValue(temp);
@@ -61,24 +62,17 @@ public class tileBWValue {
 	private void tileBWValue(String[][] b) {
 		this.board = b;
 		tempB = b;
-		String[][] tempC = tempB;
-		String[][] tempD = tempB;
+		String[][] tempC = new String[10][10];
+		String[][] tempD = new String[10][10];
 		for (int i = 0; i < 10; i++) {
-			System.out.print("\n");
 			for (int j = 0; j < 10; j++) {
-				String tile = null;
-				if (tempB[i][j].equalsIgnoreCase("available")) {
-					tile = "A";
-				} else if (tempB[i][j].equalsIgnoreCase("white")) {
-					tile = "W";
-				} else if (tempB[i][j].equalsIgnoreCase("black")) {
-					tile = "B";
-				} else if (tempB[i][j].equalsIgnoreCase("tie1move")) {
-					tile = "T";
-				}
-				System.out.print("[" + tile + "] ");
+				tempC[i][j] = "available";
+				tempD[i][j] = "available";
+
 			}
-		}System.out.println("\n\n");
+		}
+
+		System.out.println("\n\n");
 		// wh = spaces white "own"
 		// bl = spaces black "own"
 		wh = 0;
@@ -103,6 +97,7 @@ public class tileBWValue {
 					// if only one colour queen found, they own space
 					// if both then contested, neither player owns
 					while (j + c < 10) {
+
 						if (tempB[i][j + c].equalsIgnoreCase("available")
 								|| tempB[i][j + c].equalsIgnoreCase("unknown")) {
 							c++;
@@ -120,6 +115,7 @@ public class tileBWValue {
 					}
 
 					c = 1;
+					r = 1;
 					while (j - c >= 0) {
 
 						if (tempB[i][j - c].equalsIgnoreCase("available")
@@ -139,8 +135,9 @@ public class tileBWValue {
 						}
 					}
 					c = 1;
+					r = 1;
 					while (i + r < 10) {
-						
+
 						if (tempB[i + r][j].equalsIgnoreCase("available")
 								|| tempB[i + r][j].equalsIgnoreCase("unknown")) {
 							r++;
@@ -157,8 +154,9 @@ public class tileBWValue {
 						}
 					}
 					r = 1;
+					c = 1;
 					while (i - r >= 0) {
-						
+
 						if (tempB[i - r][j].equalsIgnoreCase("available")
 								|| tempB[i - r][j].equalsIgnoreCase("unknown")) {
 							r++;
@@ -174,8 +172,10 @@ public class tileBWValue {
 							r++;
 						}
 					}
+					c = 1;
 					r = 1;
 					while (j + c < 10 && i + r < 10) {
+
 						if (tempB[i + r][j + c].equalsIgnoreCase("available")
 								|| tempB[i + r][j + c].equalsIgnoreCase("unknown")) {
 							c++;
@@ -196,6 +196,7 @@ public class tileBWValue {
 					c = 1;
 					r = 1;
 					while (j + c < 10 && i - r >= 0) {
+
 						if (tempB[i - r][j + c].equalsIgnoreCase("available")
 								|| tempB[i - r][j + c].equalsIgnoreCase("unknown")) {
 							c++;
@@ -216,6 +217,7 @@ public class tileBWValue {
 					c = 1;
 					r = 1;
 					while (j - c >= 0 && i + r < 10) {
+
 						if (tempB[i + r][j - c].equalsIgnoreCase("available")
 								|| tempB[i + r][j - c].equalsIgnoreCase("unknown")) {
 							c++;
@@ -236,6 +238,7 @@ public class tileBWValue {
 					c = 1;
 					r = 1;
 					while (j - c >= 0 && i - r >= 0) {
+
 						if (tempB[i - r][j - c].equalsIgnoreCase("available")
 								|| tempB[i - r][j - c].equalsIgnoreCase("unknown")) {
 							c++;
@@ -256,18 +259,18 @@ public class tileBWValue {
 					c = 1;
 					r = 1;
 
-				} else if(tempB[i][j].equalsIgnoreCase("black")) {
-					tempC[i][j] = "black";
+				} else if (tempB[i][j].equalsIgnoreCase("black")) {
+					// tempC[i][j] = "black";
 					bOwn = true;
-				}else if(tempB[i][j].equalsIgnoreCase("white")) {
-					tempC[i][j] = "white";
+					wOwn = false;
+				} else if (tempB[i][j].equalsIgnoreCase("white")) {
+					// tempC[i][j] = "white";
 					wOwn = true;
-				}else {
-					System.out.println("ERROR");
+					bOwn = false;
+				} else {
+					System.out.println("ERROR1");
 				}
-				if(i==7&&j==0) {
-					System.out.println(bOwn+" W:"+wOwn);
-				}
+
 				// Label tiles with ownership or unknown
 				if (wOwn == true && bOwn == true) {
 					tempC[i][j] = "tie1move";
@@ -280,7 +283,7 @@ public class tileBWValue {
 				} else {
 
 					tempC[i][j] = "unknown";
-					// more = true;
+					more = true;
 				}
 
 			}
@@ -292,26 +295,9 @@ public class tileBWValue {
 		 */
 		if (more == false) {
 			tempB = tempC;
-			for (int i = 0; i < 10; i++) {
-				System.out.print("\n");
-				for (int j = 0; j < 10; j++) {
-					String tile = null;
-					if (tempC[i][j].equalsIgnoreCase("available")) {
-						tile = "A";
-					} else if (tempC[i][j].equalsIgnoreCase("white")) {
-						tile = "W";
-					} else if (tempC[i][j].equalsIgnoreCase("black")) {
-						tile = "B";
-					} else if (tempC[i][j].equalsIgnoreCase("tie1move")) {
-						tile = "T";
-					} else {
-						tile = "N";
-					}
-					System.out.print("[" + tile + "] ");
-				}
-			}
+
 		}
-		
+
 		if (more == true) {
 			more = false;
 			for (int i = 0; i < 10; i++) {
@@ -499,15 +485,15 @@ public class tileBWValue {
 						c = 1;
 						r = 1;
 
-					} else if(tempC[i][j].equalsIgnoreCase("black")) {
-						System.out.println(i+","+j+": HERE");
-						tempD[i][j] = "black";
-						bOwn = true;
-					}else if(tempC[i][j].equalsIgnoreCase("white")) {
-						tempD[i][j] = "white";
-						wOwn = true;
-					}else {
-						System.out.println("ERROR");
+					} else if (tempC[i][j].equalsIgnoreCase("black")) {
+						w2 = false;
+						b2 = true;
+					} else if (tempC[i][j].equalsIgnoreCase("white")) {
+						b2 = false;
+						w2 = true;
+					} else {
+						w2 = true;
+						b2 = true;
 					}
 					// Label tiles with ownership or unknown
 					if (w2 == true && b2 == true) {
@@ -532,6 +518,7 @@ public class tileBWValue {
 
 			{
 				tempB = tempD;
+
 			}
 			if (more == true) {
 				more = false;
@@ -720,15 +707,15 @@ public class tileBWValue {
 							c = 1;
 							r = 1;
 
-						} else if(tempD[i][j].equalsIgnoreCase("black")) {
-							System.out.println(i+","+j+": HERE");
-							tempB[i][j] = "black";
-							bOwn = true;
-						}else if(tempD[i][j].equalsIgnoreCase("white")) {
-							tempB[i][j] = "white";
-							wOwn = true;
-						}else {
-							System.out.println("ERROR");
+						} else if (tempD[i][j].equalsIgnoreCase("black")) {
+							w3 = false;
+							b3 = true;
+						} else if (tempD[i][j].equalsIgnoreCase("white")) {
+							b3 = false;
+							w3 = true;
+						} else {
+							w3 = true;
+							b3 = true;
 						}
 						// Label tiles with ownership or unknown
 						if (w3 == true && b3 == true) {
@@ -745,6 +732,7 @@ public class tileBWValue {
 						}
 					}
 				} // End of board scan #3
+
 			}
 			// unnecessary?
 			more = false;
