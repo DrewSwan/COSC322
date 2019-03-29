@@ -15,6 +15,7 @@ import java.util.List;
 public class ActionTree {
     
     private Node<BoardGameModel> root;
+    long startTime;
     static boolean white;
     ArrayList<ArrayList<Node<BoardGameModel>>> depthNodes = new ArrayList<ArrayList<Node<BoardGameModel>>>(10);
     
@@ -35,6 +36,8 @@ public class ActionTree {
     }
     
     public BoardGameModel minMax(Node<BoardGameModel> currentNode, int maxDepth){
+    	startTime = System.currentTimeMillis();
+    	
         int bestMoveStrength = minMaxEvaluation(currentNode, maxDepth, 0);
         for(Node<BoardGameModel> currentChild : currentNode.children){
             if(currentChild.strength == bestMoveStrength){
@@ -53,8 +56,13 @@ public class ActionTree {
             
             //Leaf Node
             if(currentDepth == maxDepth){
-                currentNode.strength = currentNode.data.evaluate();
-                return currentNode.strength;
+            	if(System.currentTimeMillis() - startTime < 20000) {
+            		currentNode.strength = currentNode.data.evaluate();
+                    return currentNode.strength;
+            	}else {
+            		return 0;
+            	}
+                
             }
             //Is our turn (max)
             if(currentNode.data.getWhiteTurn() == white){

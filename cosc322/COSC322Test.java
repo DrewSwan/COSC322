@@ -45,7 +45,7 @@ public class COSC322Test extends GamePlayer {
 	 * @param args for name and passwd (current, any string would work)
 	 */
 	public static void main(String[] args) {
-		COSC322Test player_01 = new COSC322Test("A.I.", "1234");
+		COSC322Test player_01 = new COSC322Test("Group14", "1234");
 	}
 
 	public COSC322Test(String userName, String passwd) {

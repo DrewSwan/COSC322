@@ -22,6 +22,8 @@ public class BoardGameModel extends GameModel {
 	public static final String POS_MARKED_WHITE = "white";
 	public static final String POS_MARKED_ARROW = "arrow";
 	public static final String POS_AVAILABLE = "available";
+	
+	
 	int[] pos;
 	ArrayList<move> childMoves;
 
