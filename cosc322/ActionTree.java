@@ -18,9 +18,8 @@ public class ActionTree {
     static boolean white;
     ArrayList<ArrayList<Node<BoardGameModel>>> depthNodes = new ArrayList<ArrayList<Node<BoardGameModel>>>(10);
     
-    
     public ActionTree(BoardGameModel rootData, boolean white2) {
-    	white = white2;
+        white = white2;   
         root = new Node<BoardGameModel>();
         root.data = rootData;
         root.children = new ArrayList<Node<BoardGameModel>>();
@@ -35,8 +34,10 @@ public class ActionTree {
     }
     
     public BoardGameModel minMax(Node<BoardGameModel> currentNode, int maxDepth){
-        int bestMoveStrength = minMaxEvaluation(currentNode, maxDepth, 0);
+        int bestMoveStrength = minMaxEvaluation(currentNode, maxDepth, 0,-1000,1000);
+        //System.out.println(bestMoveStrength);
         for(Node<BoardGameModel> currentChild : currentNode.children){
+            //System.out.println(currentChild.strength);
             if(currentChild.strength == bestMoveStrength){
                 return currentChild.data;
             }
@@ -45,7 +46,7 @@ public class ActionTree {
     }
     
     //IMPORTANT NOTE: THE WHITE STATIC VARIABLE NEEDS TO BE MODIFIED AFTER INTEGRATION!!!
-    public int minMaxEvaluation(Node<BoardGameModel> currentNode, int maxDepth, int currentDepth){
+    public int minMaxEvaluation(Node<BoardGameModel> currentNode, int maxDepth, int currentDepth,int alpha, int beta ){
         
         int currentValue;
         int currentChildValue;
@@ -59,19 +60,28 @@ public class ActionTree {
             if(currentNode.data.getWhiteTurn() == white){
                 currentValue = -1000;
                 for(Node<BoardGameModel> currentChild : currentNode.children){
-                    currentChildValue = minMaxEvaluation(currentChild, maxDepth, currentDepth+1);
+                    currentChildValue = minMaxEvaluation(currentChild, maxDepth, currentDepth+1,alpha,beta);
                     if(currentChildValue > currentValue){
                         currentValue = currentChildValue;
+                        //alpha = Math.max(alpha,currentValue);
+                    }
+                    alpha = Math.max(alpha,currentValue);
+                    if (beta <=alpha) {
+                    	break;
                     }
                 }
             //Is not our turn (min)
             }else{
                 currentValue = 1000;
                 for(Node<BoardGameModel> currentChild : currentNode.children){
-                    currentChildValue = minMaxEvaluation(currentChild, maxDepth, currentDepth+1);
+                    currentChildValue = minMaxEvaluation(currentChild, maxDepth, currentDepth+1,alpha,beta);
                     if(currentChildValue < currentValue){
                         currentValue = currentChildValue;
                     }
+                    	beta = Math.min(beta,currentValue);
+                    if (beta <=alpha) {
+                    	break;
+                    }	
                 }
             }
             currentNode.strength = currentValue;
