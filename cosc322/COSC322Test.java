@@ -308,7 +308,7 @@ public class COSC322Test extends GamePlayer {
 		if (bestMove == null) {
 			System.out.println("RIP");
 		}
-		System.out.println("Move sending");
+		System.out.println("Move sending : Value "+bestMove.evaluation);
 		playerMove(bestMove.movedQueenNowX + 1, bestMove.movedQueenNowY + 1, bestMove.firedArrowX + 1,
 				bestMove.firedArrowY + 1, bestMove.movedQueenPreviousX + 1, bestMove.movedQueenPreviousY + 1);
 		/***
@@ -338,7 +338,6 @@ public class COSC322Test extends GamePlayer {
 		this.gameClient.joinRoom(rooms.get(n));
 		System.out.println("Currently in room: " + rooms.get(n));
 
-		// ourMove();
 	}
 
 	@Override
