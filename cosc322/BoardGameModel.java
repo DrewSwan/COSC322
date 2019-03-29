@@ -38,7 +38,7 @@ public class BoardGameModel extends GameModel {
 	Queen[] bQueens = new Queen[4];
 
 	// Is it white's turn?
-    boolean whiteTurn;
+	boolean whiteTurn;
 
 	// How favourable is the boardstate?
 	int evaluation = 0;
@@ -47,8 +47,6 @@ public class BoardGameModel extends GameModel {
 
 	// Cr`eates Initial Board State
 	public BoardGameModel() {
-
-		whiteTurn = true;
 
 		wQueens[0] = new Queen(new int[] { 0, 3 });
 		wQueens[1] = new Queen(new int[] { 0, 6 });
@@ -81,7 +79,7 @@ public class BoardGameModel extends GameModel {
 	// Creates board state given the previous board state, the coordiantes of the
 	// queen just moved, the new coordinates of the queen just moved and the
 	// coordinates of the just-fired arrow.
-	public BoardGameModel(BoardGameModel prev, int qPrevX, int qPrevY, int qNowX, int qNowY, int arrowX, int arrowY) {
+	public BoardGameModel(BoardGameModel prev, int qPrevX, int qPrevY, int qNowX, int qNowY, int arrowX, int arrowY,boolean white) {
 		board = new String[10][10];
 
 		for (int i = 0; i < 10; i++) {
@@ -89,7 +87,14 @@ public class BoardGameModel extends GameModel {
 				board[i][j] = prev.getBoard()[i][j];
 			}
 		}
-		whiteTurn = prev.getWhiteTurn();
+		whiteTurn = white;
+		//boolean test = !prev.getWhiteTurn();
+		//if (test == true) {
+		//	System.out.println("WHITE TURN");
+
+		//} else {
+		//	System.out.println("BLACK TURN");
+		//}
 
 		// System.out.println("PrevX " + qPrevX + ", PrevY " + qPrevY + ", NowX " +
 		// qNowX + ", NowY " + qNowY);
@@ -110,8 +115,8 @@ public class BoardGameModel extends GameModel {
 				// System.out.println(activeQueen[0]+":"+qPrevX+","+activeQueen[1]+":"+qPrevY);
 				if (activeQueen[0] == qPrevX && activeQueen[1] == qPrevY) {
 					wQueens[i] = new Queen(new int[] { qNowX, qNowY });
-					//System.out.println("correct white, qNowX: " + wQueens[i].getPosition()[0] + ", qNowY: "
-						//	+ wQueens[i].getPosition()[1]);
+					// System.out.println("WHITE");
+					// whiteTurn = true;
 					break;
 				}
 			}
@@ -121,8 +126,8 @@ public class BoardGameModel extends GameModel {
 				// System.out.println("black");
 				if (activeQueen[0] == qPrevX && activeQueen[1] == qPrevY) {
 					bQueens[i] = new Queen(new int[] { qNowX, qNowY });
-					System.out.println("correct black , qNowX: " + bQueens[i].getPosition()[0] + ", qNowY: "
-							+ bQueens[i].getPosition()[1]);
+					// System.out.println("BLACK");
+					// whiteTurn = false;
 					break;
 				}
 			}
@@ -130,9 +135,11 @@ public class BoardGameModel extends GameModel {
 
 		board[qPrevX][qPrevY] = POS_AVAILABLE;
 		board[arrowX][arrowY] = POS_MARKED_ARROW;
-		if (whiteTurn = true) {
+		if (whiteTurn == true) {
+			// System.out.println("POS_MARKED_WHITE");
 			board[qNowX][qNowY] = POS_MARKED_WHITE;
 		} else {
+			// System.out.println("POS_MARKED_BLACK");
 			board[qNowX][qNowY] = POS_MARKED_BLACK;
 		}
 		// System.out.println("WHITE Q:

@@ -33,7 +33,7 @@ public class COSC322Test extends GamePlayer {
 	private GameBoard board = null;
 	private boolean gameStarted = false;
 	private String userName = null;
-	static private boolean white = false;
+	static private boolean white;
 
 	public static boolean ourTurn = false;
 
@@ -45,7 +45,7 @@ public class COSC322Test extends GamePlayer {
 	 * @param args for name and passwd (current, any string would work)
 	 */
 	public static void main(String[] args) {
-		COSC322Test player_01 = new COSC322Test("Everton2", "1234");
+		COSC322Test player_01 = new COSC322Test("w", "1234");
 	}
 
 	public COSC322Test(String userName, String passwd) {
@@ -61,21 +61,21 @@ public class COSC322Test extends GamePlayer {
 		// message
 		// from the server.
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
-			
+
 			// BoardGameModel gboard = new BoardGameModel();
 			// BoardGameModel();
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
-				System.out.println("Game State: " + msgDetails.get("player-black"));
+				System.out.println("Game State: " + msgDetails.get("player-black") + " is BLACK");
 				white = false;
 				System.out.println("We go first.");
 				ourMove();
 			} else {
-				System.out.println("Other player goes first.");
+				System.out.println("Other player goes first. We are " + msgDetails.get("player-white") + " WHITE");
 				white = true;
 			}
 
 		} else if (messageType.equals(GameMessage.GAME_ACTION_MOVE)) {
-			//System.out.println("AAA");
+			// System.out.println("AAA");
 			handleOpponentMove(msgDetails);
 		}
 
@@ -108,9 +108,11 @@ public class COSC322Test extends GamePlayer {
 	public void ourMove() {
 		System.out.println("Calculating Move");
 		ourTurn = true;
-		
-		board.gameModel.whiteTurn = true;
-
+		if (white == true) {
+			board.gameModel.whiteTurn = true;
+		} else if (white == false) {
+			board.gameModel.whiteTurn = false;
+		}
 		long startTime = System.currentTimeMillis();
 
 		moveGenerator = new ActionTree(board.gameModel);
@@ -124,7 +126,7 @@ public class COSC322Test extends GamePlayer {
 
 		for (move m : board.gameModel.childMoves) {
 			currentDepth.add(moveGenerator.getRoot().createChild(
-					new BoardGameModel(moveGenerator.getRoot().getData(), m.qx, m.qy, m.nx, m.ny, m.ax, m.ay)));
+					new BoardGameModel(moveGenerator.getRoot().getData(), m.qx, m.qy, m.nx, m.ny, m.ax, m.ay,white)));
 		}
 
 		moveGenerator.depthNodes.add(currentDepth);
@@ -150,7 +152,7 @@ public class COSC322Test extends GamePlayer {
 						System.out.println("Issue Found");
 					}
 					currentDepth
-							.add(a.createChild(new BoardGameModel(currentBoard, m.qx, m.qy, m.nx, m.ny, m.ax, m.ay)));
+							.add(a.createChild(new BoardGameModel(currentBoard, m.qx, m.qy, m.nx, m.ny, m.ax, m.ay,white)));
 				}
 				if (System.currentTimeMillis() - startTime > 5000) {
 					break;
@@ -185,8 +187,8 @@ public class COSC322Test extends GamePlayer {
 		int[] ar = new int[2];
 		ar[0] = arow;
 		ar[1] = acol;
-		System.out.println(x+","+y);
-		board.gameModel = new BoardGameModel(board.gameModel,qfr-1,qfc-1,x-1,y-1,arow-1,acol-1);
+		//System.out.println(x + "," + y);
+		board.gameModel = new BoardGameModel(board.gameModel, qfr - 1, qfc - 1, x - 1, y - 1, arow - 1, acol - 1,white);
 		board.repaint();
 		this.gameClient.sendMoveMessage(qf, qn, ar);
 
@@ -306,20 +308,20 @@ public class COSC322Test extends GamePlayer {
 	public void determineMove(int depth) {
 		ourTurn = false;
 
-		System.out.println("Move decided on");
+		//System.out.println("Move decided on");
 
 		BoardGameModel bestMove = moveGenerator.minMax(depth);
 
 		if (bestMove == null) {
 			System.out.println("RIP");
 		}
-		System.out.println("Success");
-		System.out
-				.println("PrevX " + (bestMove.movedQueenPreviousX + 1) + ",PrevY " + (bestMove.movedQueenPreviousY + 1)
-						+ ",NowX " + (bestMove.movedQueenNowX + 1) + ",NowY " + (bestMove.movedQueenNowY + 1));
+		System.out.println("Move sending");
+		//System.out
+			//	.println("PrevX " + (bestMove.movedQueenPreviousX + 1) + ",PrevY " + (bestMove.movedQueenPreviousY + 1)
+				//		+ ",NowX " + (bestMove.movedQueenNowX + 1) + ",NowY " + (bestMove.movedQueenNowY + 1));
 		playerMove(bestMove.movedQueenNowX + 1, bestMove.movedQueenNowY + 1, bestMove.firedArrowX + 1,
 				bestMove.firedArrowY + 1, bestMove.movedQueenPreviousX + 1, bestMove.movedQueenPreviousY + 1);
-		//playerMove(int x, int y, int arow, int acol, int qfr, int qfc)
+		// playerMove(int x, int y, int arow, int acol, int qfr, int qfc)
 		/***
 		 * 
 		 * MARCH 27: This is where the only error lies Need to call boolean validMove in
