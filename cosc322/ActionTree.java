@@ -15,11 +15,12 @@ import java.util.List;
 public class ActionTree {
     
     private Node<BoardGameModel> root;
-    static boolean white = true;
+    static boolean white;
     ArrayList<ArrayList<Node<BoardGameModel>>> depthNodes = new ArrayList<ArrayList<Node<BoardGameModel>>>(10);
     
     
-    public ActionTree(BoardGameModel rootData) {
+    public ActionTree(BoardGameModel rootData, boolean white2) {
+    	white = white2;
         root = new Node<BoardGameModel>();
         root.data = rootData;
         root.children = new ArrayList<Node<BoardGameModel>>();
@@ -35,9 +36,7 @@ public class ActionTree {
     
     public BoardGameModel minMax(Node<BoardGameModel> currentNode, int maxDepth){
         int bestMoveStrength = minMaxEvaluation(currentNode, maxDepth, 0);
-        //System.out.println(bestMoveStrength);
         for(Node<BoardGameModel> currentChild : currentNode.children){
-            //System.out.println(currentChild.strength);
             if(currentChild.strength == bestMoveStrength){
                 return currentChild.data;
             }

@@ -88,17 +88,7 @@ public class BoardGameModel extends GameModel {
 			}
 		}
 		whiteTurn = white;
-		//boolean test = !prev.getWhiteTurn();
-		//if (test == true) {
-		//	System.out.println("WHITE TURN");
-
-		//} else {
-		//	System.out.println("BLACK TURN");
-		//}
-
-		// System.out.println("PrevX " + qPrevX + ", PrevY " + qPrevY + ", NowX " +
-		// qNowX + ", NowY " + qNowY);
-
+		
 		Queen[] prevWQueens = prev.getWhiteQueens();
 		Queen[] prevBQueens = prev.getBlackQueens();
 
@@ -115,8 +105,7 @@ public class BoardGameModel extends GameModel {
 				// System.out.println(activeQueen[0]+":"+qPrevX+","+activeQueen[1]+":"+qPrevY);
 				if (activeQueen[0] == qPrevX && activeQueen[1] == qPrevY) {
 					wQueens[i] = new Queen(new int[] { qNowX, qNowY });
-					// System.out.println("WHITE");
-					// whiteTurn = true;
+					
 					break;
 				}
 			}
@@ -126,8 +115,7 @@ public class BoardGameModel extends GameModel {
 				// System.out.println("black");
 				if (activeQueen[0] == qPrevX && activeQueen[1] == qPrevY) {
 					bQueens[i] = new Queen(new int[] { qNowX, qNowY });
-					// System.out.println("BLACK");
-					// whiteTurn = false;
+					
 					break;
 				}
 			}
@@ -136,14 +124,10 @@ public class BoardGameModel extends GameModel {
 		board[qPrevX][qPrevY] = POS_AVAILABLE;
 		board[arrowX][arrowY] = POS_MARKED_ARROW;
 		if (whiteTurn == true) {
-			// System.out.println("POS_MARKED_WHITE");
 			board[qNowX][qNowY] = POS_MARKED_WHITE;
 		} else {
-			// System.out.println("POS_MARKED_BLACK");
 			board[qNowX][qNowY] = POS_MARKED_BLACK;
 		}
-		// System.out.println("WHITE Q:
-		// "+wQueens[0].getPosition()[0]+","+wQueens[0].getPosition()[1]+","+wQueens[1].getPosition()[0]+","+wQueens[1].getPosition()[1]+","+wQueens[2].getPosition()[0]+","+wQueens[2].getPosition()[1]+","+wQueens[3].getPosition()[0]+","+wQueens[3].getPosition()[1]+",");
 		movedQueenPreviousX = qPrevX;
 		movedQueenPreviousY = qPrevY;
 		movedQueenNowX = qNowX;

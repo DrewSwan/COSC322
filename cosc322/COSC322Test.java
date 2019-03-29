@@ -62,8 +62,6 @@ public class COSC322Test extends GamePlayer {
 		// from the server.
 		if (messageType.equals(GameMessage.GAME_ACTION_START)) {
 
-			// BoardGameModel gboard = new BoardGameModel();
-			// BoardGameModel();
 			if (((String) msgDetails.get("player-black")).equals(this.userName())) {
 				System.out.println("Game State: " + msgDetails.get("player-black") + " is BLACK");
 				white = false;
@@ -85,10 +83,7 @@ public class COSC322Test extends GamePlayer {
 		return true;
 	}
 
-	/**
-	 * private void randomMove() { // TODO Auto-generated method stub
-	 * PossibleMoves(board,white,wQueens,bQueens); }
-	 **/
+	
 
 	private void handleOpponentMove(Map<String, Object> msgDetails) {
 		System.out.println("OpponentMove(): " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
@@ -115,7 +110,7 @@ public class COSC322Test extends GamePlayer {
 		}
 		long startTime = System.currentTimeMillis();
 
-		moveGenerator = new ActionTree(board.gameModel);
+		moveGenerator = new ActionTree(board.gameModel,white);
 		PossibleMoves initialMove = new PossibleMoves(board.gameModel);
 		board.gameModel.childMoves = initialMove.moveGeneration();
 
@@ -308,20 +303,14 @@ public class COSC322Test extends GamePlayer {
 	public void determineMove(int depth) {
 		ourTurn = false;
 
-		//System.out.println("Move decided on");
-
 		BoardGameModel bestMove = moveGenerator.minMax(depth);
 
 		if (bestMove == null) {
 			System.out.println("RIP");
 		}
 		System.out.println("Move sending");
-		//System.out
-			//	.println("PrevX " + (bestMove.movedQueenPreviousX + 1) + ",PrevY " + (bestMove.movedQueenPreviousY + 1)
-				//		+ ",NowX " + (bestMove.movedQueenNowX + 1) + ",NowY " + (bestMove.movedQueenNowY + 1));
 		playerMove(bestMove.movedQueenNowX + 1, bestMove.movedQueenNowY + 1, bestMove.firedArrowX + 1,
 				bestMove.firedArrowY + 1, bestMove.movedQueenPreviousX + 1, bestMove.movedQueenPreviousY + 1);
-		// playerMove(int x, int y, int arow, int acol, int qfr, int qfc)
 		/***
 		 * 
 		 * MARCH 27: This is where the only error lies Need to call boolean validMove in
@@ -330,11 +319,6 @@ public class COSC322Test extends GamePlayer {
 		 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		 * 
 		 */
-		// boolean validMove = GB.markPosition(bestMove.movedQueenNowX + 1,
-		// bestMove.movedQueenNowY + 1,
-		// bestMove.firedArrowX + 1, bestMove.firedArrowY + 1,
-		// bestMove.movedQueenPreviousX + 1,
-		// bestMove.movedQueenPreviousY + 1, false); // update itself
 	}
 
 	String[][] boardGame = null;
