@@ -19,7 +19,10 @@ public class tileBWValue {
 	public boolean more = false;
 	
 	tileBWValue(){
-		
+		/**
+		 * 
+		 * Should this be something...??
+		 */
 	}
 
 	// If player is white, returns eval value based on wh ownership - black
@@ -305,6 +308,7 @@ public class tileBWValue {
 		}
 
 		if (more == true) {
+			wh = 0;bl=0;
 			more = false;
 			for (int i = 0; i < 10; i++) {
 				for (int j = 0; j < 10; j++) {
@@ -527,6 +531,7 @@ public class tileBWValue {
 
 			}
 			if (more == true) {
+				wh=0;bl=0;
 				more = false;
 				for (int i = 0; i < 10; i++) {
 					for (int j = 0; j < 10; j++) {

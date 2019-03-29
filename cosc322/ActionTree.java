@@ -38,6 +38,7 @@ public class ActionTree {
         int bestMoveStrength = minMaxEvaluation(currentNode, maxDepth, 0);
         for(Node<BoardGameModel> currentChild : currentNode.children){
             if(currentChild.strength == bestMoveStrength){
+            	System.out.println("MOVE STRENGTH: "+currentChild.strength+":"+bestMoveStrength);
                 return currentChild.data;
             }
         }

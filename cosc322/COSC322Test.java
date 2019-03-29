@@ -45,7 +45,7 @@ public class COSC322Test extends GamePlayer {
 	 * @param args for name and passwd (current, any string would work)
 	 */
 	public static void main(String[] args) {
-		COSC322Test player_01 = new COSC322Test("w", "1234");
+		COSC322Test player_01 = new COSC322Test("A.I.", "1234");
 	}
 
 	public COSC322Test(String userName, String passwd) {
@@ -308,7 +308,8 @@ public class COSC322Test extends GamePlayer {
 		if (bestMove == null) {
 			System.out.println("RIP");
 		}
-		System.out.println("Move sending : Value "+bestMove.evaluation);
+		//System.out.println("Move sending : Value "+bestMove.);
+		
 		playerMove(bestMove.movedQueenNowX + 1, bestMove.movedQueenNowY + 1, bestMove.firedArrowX + 1,
 				bestMove.firedArrowY + 1, bestMove.movedQueenPreviousX + 1, bestMove.movedQueenPreviousY + 1);
 		/***
