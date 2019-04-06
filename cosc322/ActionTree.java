@@ -15,11 +15,13 @@ import java.util.List;
 public class ActionTree {
     
     private Node<BoardGameModel> root;
+    long startTime;
     static boolean white;
     ArrayList<ArrayList<Node<BoardGameModel>>> depthNodes = new ArrayList<ArrayList<Node<BoardGameModel>>>(10);
     
+    
     public ActionTree(BoardGameModel rootData, boolean white2) {
-        white = white2;   
+    	white = white2;
         root = new Node<BoardGameModel>();
         root.data = rootData;
         root.children = new ArrayList<Node<BoardGameModel>>();
@@ -34,11 +36,12 @@ public class ActionTree {
     }
     
     public BoardGameModel minMax(Node<BoardGameModel> currentNode, int maxDepth){
-        int bestMoveStrength = minMaxEvaluation(currentNode, maxDepth, 0,-1000,1000);
-        //System.out.println(bestMoveStrength);
+    	startTime = System.currentTimeMillis();
+    	
+        int bestMoveStrength = minMaxEvaluation(currentNode, maxDepth, 0,true,-1000,1000);
         for(Node<BoardGameModel> currentChild : currentNode.children){
-            //System.out.println(currentChild.strength);
             if(currentChild.strength == bestMoveStrength){
+            	System.out.println("MOVE STRENGTH: "+currentChild.strength+":"+bestMoveStrength);
                 return currentChild.data;
             }
         }
@@ -46,43 +49,54 @@ public class ActionTree {
     }
     
     //IMPORTANT NOTE: THE WHITE STATIC VARIABLE NEEDS TO BE MODIFIED AFTER INTEGRATION!!!
-    public int minMaxEvaluation(Node<BoardGameModel> currentNode, int maxDepth, int currentDepth,int alpha, int beta ){
+    public int minMaxEvaluation(Node<BoardGameModel> currentNode, int maxDepth, int currentDepth,Boolean maximizingPlayer,int alpha, int beta){
         
         int currentValue;
         int currentChildValue;
             
             //Leaf Node
             if(currentDepth == maxDepth){
-                currentNode.strength = currentNode.data.evaluate();
-                return currentNode.strength;
+            	if(System.currentTimeMillis() - startTime < 10000) {
+            		currentNode.strength = currentNode.data.evaluate();
+                    return currentNode.strength;
+            	}else {
+            		return 0;
+            	}
+                
             }
             //Is our turn (max)
-            if(currentNode.data.getWhiteTurn() == white){
+            if(maximizingPlayer){
                 currentValue = -1000;
                 for(Node<BoardGameModel> currentChild : currentNode.children){
-                    currentChildValue = minMaxEvaluation(currentChild, maxDepth, currentDepth+1,alpha,beta);
+                    currentChildValue = minMaxEvaluation(currentChild, maxDepth, currentDepth+1,false,alpha,beta);
                     if(currentChildValue > currentValue){
                         currentValue = currentChildValue;
-                        //alpha = Math.max(alpha,currentValue);
                     }
-                    alpha = Math.max(alpha,currentValue);
-                    if (beta <=alpha) {
-                    	break;
-                    }
+                    alpha = Math.max(alpha,currentValue );
+                    //System.out.println("alpha: " + alpha);
+                	if (beta <=alpha) {
+                		System.out.println("this is max pruning: " + alpha);
+                		break;
+                	}
                 }
+                	
+                
             //Is not our turn (min)
             }else{
                 currentValue = 1000;
                 for(Node<BoardGameModel> currentChild : currentNode.children){
-                    currentChildValue = minMaxEvaluation(currentChild, maxDepth, currentDepth+1,alpha,beta);
+                    currentChildValue = minMaxEvaluation(currentChild, maxDepth, currentDepth+1,true,alpha,beta);
                     if(currentChildValue < currentValue){
                         currentValue = currentChildValue;
                     }
-                    	beta = Math.min(beta,currentValue);
-                    if (beta <=alpha) {
+                    beta = Math.max(beta, currentValue);
+                    //System.out.println("beta: " + beta);
+                    if(beta<=alpha) {
+                    	System.out.println("this is min pruning" + beta);
                     	break;
-                    }	
+                    }
                 }
+                
             }
             currentNode.strength = currentValue;
             return currentValue;
